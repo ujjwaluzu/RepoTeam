@@ -1,62 +1,126 @@
-from django.shortcuts import render
+import json
+
 from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
-from django import forms
 from django.contrib.auth.models import User
-# Create your views here.
-
-def index(request):
-    return render(request, "core/index.html")
-def login_view(request):
-    if request.method == "POST":
-
-        # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("index"))
-        else:
-            return render(request, "core/login.html", {
-                "message": "Invalid username and/or password."
-            })
-    else:
-        return render(request, "core/login.html")
+from django.db import IntegrityError
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
-def logout_view(request):
+def api_info(request):
+    return JsonResponse(
+        {
+            "service": "RepoTeam API",
+            "status": "ok",
+            "backend": "Django",
+        }
+    )
+
+
+def health_api(request):
+    return JsonResponse(
+        {
+            "service": "RepoTeam API",
+            "status": "ok",
+            "backend": "Django",
+        }
+    )
+
+
+def me_api(request):
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({"authenticated": False, "user": None})
+
+    return JsonResponse(
+        {
+            "authenticated": True,
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+            },
+        }
+    )
+
+
+def _parse_json_body(request):
+    try:
+        return json.loads(request.body or b"{}")
+    except json.JSONDecodeError:
+        return None
+
+
+@csrf_exempt
+def login_api(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required."}, status=405)
+
+    data = _parse_json_body(request)
+    if data is None:
+        return JsonResponse({"error": "Invalid JSON body."}, status=400)
+    username = data.get("username", "")
+    password = data.get("password", "")
+
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        return JsonResponse(
+            {"error": "Invalid username and/or password."},
+            status=400,
+        )
+
+    login(request, user)
+    return JsonResponse(
+        {
+            "message": "Logged in successfully.",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+            },
+        }
+    )
+
+
+@csrf_exempt
+def logout_api(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required."}, status=405)
+
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return JsonResponse({"message": "Logged out successfully."})
 
 
-def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
+@csrf_exempt
+def register_api(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required."}, status=405)
 
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "core/register.html", {
-                "message": "Passwords must match."
-            })
+    data = _parse_json_body(request)
+    if data is None:
+        return JsonResponse({"error": "Invalid JSON body."}, status=400)
+    username = data.get("username", "")
+    email = data.get("email", "")
+    password = data.get("password", "")
+    confirmation = data.get("confirmation", "")
 
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(request, "core/register.html", {
-                "message": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
-    else:
-        return render(request, "core/register.html")
+    if password != confirmation:
+        return JsonResponse({"error": "Passwords must match."}, status=400)
+
+    try:
+        user = User.objects.create_user(username=username, email=email, password=password)
+    except IntegrityError:
+        return JsonResponse({"error": "Username already taken."}, status=400)
+
+    login(request, user)
+    return JsonResponse(
+        {
+            "message": "Account created successfully.",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+            },
+        },
+        status=201,
+    )

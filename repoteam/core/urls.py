@@ -2,8 +2,10 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("login", views.login_view, name="login"),
-    path("logout", views.logout_view, name="logout"),
-    path("register", views.register, name="register"),
+    path("", views.api_info, name="index"),
+    path("api/health/", views.health_api, name="health_api"),
+    path("api/auth/me/", views.me_api, name="me_api"),
+    path("api/auth/login/", views.login_api, name="login_api"),
+    path("api/auth/logout/", views.logout_api, name="logout_api"),
+    path("api/auth/register/", views.register_api, name="register_api"),
 ]
