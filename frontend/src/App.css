@@ -150,3 +150,21 @@
   .form-page-heading h1 { font-size: 31px; }
   .toggle-row { align-items: flex-start; }
 }
+
+/* Design-system polish: softer surfaces, higher-contrast ink, and a more
+   confident indigo accent without changing the page structure. */
+.site-header { background: rgba(248, 250, 252, .92); }
+.soft-section { background: #f1f4f8; }
+.site-footer { background: #f0f3f7; }
+.auth-brand-panel { background: #172033; }
+.button-primary { box-shadow: 0 8px 18px rgba(91, 80, 214, .2); }
+.button-primary:hover { box-shadow: 0 10px 22px rgba(91, 80, 214, .28); }
+.hero-content h1, .page-intro h1, .dashboard-header h1, .detail-title h1, .profile-info h1 { letter-spacing: -2.2px; }
+.hero-content h1 em { color: #5b50d6; }
+.eyebrow, .step-number { color: #5b50d6; }
+.skill-badge { color: #5e6c80; background: #f1f4f8; border-color: #e8edf3; }
+.badge-info { color: #4d5ba0; background: #e9ebfb; }
+.badge-success { color: #176d51; background: #e1f3eb; }
+.filter-note, .aside-callout { background: #f0efff; }
+.welcome-banner { background: #e9e8ff; border-color: #dcd8fb; }
+.stat-icon, .role-icon, .publish-icon { background: #efedff; }
