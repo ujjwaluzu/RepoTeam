@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/Layout'
-import { AuthPage, CreateProjectPage, DashboardPage, DeveloperProfilePage, DevelopersPage, LandingPage, MyProjectsPage, NotFoundPage, ApplicationsPage, ProjectDetailsPage, ProjectsPage, SettingsPage, TeamPage } from './pages'
+import { AuthPage, CreateProjectPage, DashboardPage, LandingPage, MyProjectsPage, NotFoundPage, ApplicationsPage, ProjectDetailsPage, ProjectsPage, TeamPage } from './pages'
+import { DeveloperProfilePage, DevelopersPage, SettingsPage } from './connectedPages'
 import './App.css'
 
 function App() {
