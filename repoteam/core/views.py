@@ -6,7 +6,6 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-
 def api_info(request):
     return JsonResponse(
         {
