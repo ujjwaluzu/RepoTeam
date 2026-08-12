@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Project, ProjectRole
+from .models import Notification, Profile, Project, ProjectApplication, ProjectMembership, ProjectRole, UserPreference
 
 
 @admin.register(Profile)
@@ -21,3 +21,31 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ("title", "short_description", "owner__username")
     prepopulated_fields = {"slug": ("title",)}
     inlines = (ProjectRoleInline,)
+
+
+@admin.register(ProjectMembership)
+class ProjectMembershipAdmin(admin.ModelAdmin):
+    list_display = ("project", "user", "member_role", "role", "joined_at")
+    list_filter = ("member_role",)
+    search_fields = ("project__title", "user__username", "role__title")
+
+
+@admin.register(ProjectApplication)
+class ProjectApplicationAdmin(admin.ModelAdmin):
+    list_display = ("project", "applicant", "role", "status", "created_at", "reviewed_at")
+    list_filter = ("status",)
+    search_fields = ("project__title", "applicant__username", "role__title")
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ("recipient", "notification_type", "title", "project", "is_read", "created_at")
+    list_filter = ("notification_type", "is_read")
+    search_fields = ("recipient__username", "title", "body", "project__title")
+
+
+@admin.register(UserPreference)
+class UserPreferenceAdmin(admin.ModelAdmin):
+    list_display = ("user", "email_applications", "email_decisions", "show_availability", "show_activity", "updated_at")
+    list_filter = ("email_applications", "email_decisions", "show_availability", "show_activity", "reduce_motion")
+    search_fields = ("user__username", "user__email")

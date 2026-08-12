@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from .models import Profile, Project, ProjectRole
+from .models import ActivityEvent, Profile, Project, ProjectApplication, ProjectMembership, ProjectRole
 
 
 class ProfileApiTests(TestCase):
@@ -111,3 +111,109 @@ class ProjectApiTests(TestCase):
         response = self.client.post("/api/projects/", data={"title": ""}, content_type="application/json")
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.json())
+
+
+class MembershipAndApplicationApiTests(TestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user("owner", password="safe-password-123")
+        Profile.objects.create(user=self.owner, display_name="Owner")
+        self.applicant = User.objects.create_user("applicant", password="safe-password-123")
+        Profile.objects.create(user=self.applicant, display_name="Applicant")
+        self.other = User.objects.create_user("other", password="safe-password-123")
+        self.project = Project.objects.create(
+            owner=self.owner,
+            title="Community Garden",
+            slug="community-garden",
+            short_description="A shared project.",
+            project_type=Project.ProjectType.COMMUNITY,
+            difficulty=Project.Difficulty.BEGINNER,
+            status=Project.Status.RECRUITING,
+            team_capacity=3,
+            workflow_status=Project.WorkflowStatus.PUBLISHED,
+        )
+        self.role = ProjectRole.objects.create(project=self.project, title="Frontend Developer", required_skills=["React"])
+        ProjectMembership.objects.create(project=self.project, user=self.owner, member_role=ProjectMembership.MemberRole.OWNER)
+
+    def test_join_project_creates_membership_and_duplicate_is_rejected(self):
+        self.client.force_login(self.applicant)
+        self.project.team_capacity = 1
+        self.project.save(update_fields=["team_capacity"])
+        full = self.client.post(f"/api/projects/{self.project.slug}/join/")
+        self.assertEqual(full.status_code, 400)
+        self.project.team_capacity = 3
+        self.project.save(update_fields=["team_capacity"])
+        response = self.client.post(f"/api/projects/{self.project.slug}/join/")
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProjectMembership.objects.filter(project=self.project).count(), 2)
+        duplicate = self.client.post(f"/api/projects/{self.project.slug}/join/")
+        self.assertEqual(duplicate.status_code, 400)
+
+    def test_apply_review_and_dashboard_boxes(self):
+        self.client.force_login(self.applicant)
+        response = self.client.post(
+            f"/api/projects/{self.project.slug}/roles/{self.role.id}/apply/",
+            data={"message": "I would love to help."},
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 201)
+        application = ProjectApplication.objects.get()
+        self.assertEqual(application.status, ProjectApplication.Status.PENDING)
+        self.assertEqual(self.client.get("/api/applications/?kind=sent").json()["count"], 1)
+        self.client.force_login(self.owner)
+        self.assertEqual(self.client.get("/api/applications/?kind=received").json()["count"], 1)
+        accepted = self.client.post(f"/api/applications/{application.id}/accept/")
+        self.assertEqual(accepted.status_code, 200)
+        application.refresh_from_db()
+        self.assertEqual(application.status, ProjectApplication.Status.ACCEPTED)
+        self.assertTrue(ProjectMembership.objects.filter(project=self.project, user=self.applicant, role=self.role).exists())
+
+    def test_duplicate_pending_application_capacity_and_withdrawal(self):
+        self.client.force_login(self.applicant)
+        payload = {"role_id": self.role.id, "message": "Please consider me."}
+        self.assertEqual(self.client.post(f"/api/projects/{self.project.slug}/apply/", data=payload, content_type="application/json").status_code, 201)
+        duplicate = self.client.post(f"/api/projects/{self.project.slug}/apply/", data=payload, content_type="application/json")
+        self.assertEqual(duplicate.status_code, 400)
+        application = ProjectApplication.objects.get()
+        self.assertEqual(self.client.post(f"/api/applications/{application.id}/withdraw/").status_code, 200)
+        self.assertEqual(self.client.post(f"/api/projects/{self.project.slug}/apply/", data=payload, content_type="application/json").status_code, 201)
+
+    def test_only_owner_can_review_and_project_members_are_visible(self):
+        self.client.force_login(self.applicant)
+        self.client.post(f"/api/projects/{self.project.slug}/apply/", data={"role_id": self.role.id}, content_type="application/json")
+        application = ProjectApplication.objects.get()
+        self.assertEqual(self.client.post(f"/api/applications/{application.id}/reject/").status_code, 403)
+        self.client.force_login(self.owner)
+        members = self.client.get(f"/api/projects/{self.project.slug}/members/")
+        self.assertEqual(members.status_code, 200)
+        self.assertEqual(members.json()["count"], 1)
+
+    def test_dashboard_returns_real_counts_activity_and_recommendations(self):
+        Profile.objects.get(user=self.applicant).skills = ["React"]
+        Profile.objects.get(user=self.applicant).availability = Profile.Availability.OPEN
+        Profile.objects.get(user=self.applicant).save()
+        recommended = Project.objects.create(
+            owner=self.owner,
+            title="React Community",
+            slug="react-community",
+            short_description="A React project.",
+            project_type=Project.ProjectType.COMMUNITY,
+            difficulty=Project.Difficulty.BEGINNER,
+            status=Project.Status.RECRUITING,
+            workflow_status=Project.WorkflowStatus.PUBLISHED,
+            technologies=["React"],
+        )
+        ProjectRole.objects.create(project=recommended, title="Frontend", required_skills=["React"])
+        self.client.force_login(self.applicant)
+        self.client.post(f"/api/projects/{self.project.slug}/join/")
+        response = self.client.get("/api/dashboard/")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["summary"]["contributing_projects"], 1)
+        self.assertEqual(payload["summary"]["contributions"], 1)
+        self.assertTrue(any(item["event_type"] == ActivityEvent.EventType.MEMBER_JOINED for item in payload["activity"]))
+        self.assertEqual(payload["recommendations"][0]["slug"], recommended.slug)
+        self.assertIn("React", payload["recommendations"][0]["matched_skills"])
+
+    def test_dashboard_requires_authentication(self):
+        response = self.client.get("/api/dashboard/")
+        self.assertEqual(response.status_code, 401)

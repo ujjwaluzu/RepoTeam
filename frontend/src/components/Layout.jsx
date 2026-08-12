@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ActivityItem, Avatar, Button, Icon, Logo } from './UI'
 import { currentUser, activities } from '../data/mockData'
+import { api } from '../api'
 
 const publicLinks = [{ to: '/projects', label: 'Explore Projects' }, { to: '/developers', label: 'Developers' }, { to: '/#about', label: 'About' }]
 
@@ -26,10 +27,17 @@ const sideLinks = [
   { to: '/settings', label: 'Settings', icon: 'settings' },
 ]
 
-export function DashboardLayout({ children }) {
+export function DashboardLayout({ children, user: providedUser }) {
   const location = useLocation()
   const [open, setOpen] = useState(false)
-  return <div className="dashboard-shell"><aside className={`dashboard-sidebar ${open ? 'sidebar-open' : ''}`}><div className="sidebar-brand"><Logo /><button className="sidebar-close" onClick={() => setOpen(false)} aria-label="Close sidebar"><Icon name="close" /></button></div><div className="sidebar-label">Workspace</div><nav className="sidebar-nav">{sideLinks.map((link) => <NavLink key={link.label} to={link.to} end={link.end} className={({ isActive }) => isActive || (link.label === 'Discover' && location.pathname.startsWith('/projects')) ? 'active' : ''} onClick={() => setOpen(false)}><Icon name={link.icon} size={18} /><span>{link.label}</span>{link.label === 'Applications' ? <span className="nav-count">2</span> : null}</NavLink>)}</nav><div className="sidebar-bottom"><div className="user-mini"><Avatar user={currentUser} size="sm" /><div><strong>{currentUser.name}</strong><span>@{currentUser.username}</span></div><Icon name="chevron" size={15} /></div></div></aside><div className="dashboard-content"><div className="dashboard-mobilebar"><button className="menu-button" onClick={() => setOpen(true)} aria-label="Open sidebar"><Icon name="menu" /></button><Logo /><button className="icon-button" aria-label="Notifications"><Icon name="bell" /></button></div>{children}</div></div>
+  const [liveUser, setLiveUser] = useState(providedUser || null)
+  const [pendingApplications, setPendingApplications] = useState(0)
+  useEffect(() => { if (!providedUser) api('/api/auth/me/').then((response) => { if (response.authenticated) setLiveUser(response.user) }).catch(() => {}) }, [providedUser])
+  useEffect(() => { api('/api/applications/?kind=received&status=pending').then((response) => setPendingApplications(response.count)).catch(() => {}) }, [])
+  const user = liveUser || currentUser
+  const displayName = user.display_name || user.name || user.username
+  const userForAvatar = { ...user, name: displayName, initials: displayName.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase() }
+  return <div className="dashboard-shell"><aside className={`dashboard-sidebar ${open ? 'sidebar-open' : ''}`}><div className="sidebar-brand"><Logo /><button className="sidebar-close" onClick={() => setOpen(false)} aria-label="Close sidebar"><Icon name="close" /></button></div><div className="sidebar-label">Workspace</div><nav className="sidebar-nav">{sideLinks.map((link) => <NavLink key={link.label} to={link.to} end={link.end} className={({ isActive }) => isActive || (link.label === 'Discover' && location.pathname.startsWith('/projects')) ? 'active' : ''} onClick={() => setOpen(false)}><Icon name={link.icon} size={18} /><span>{link.label}</span>{link.label === 'Applications' && pendingApplications ? <span className="nav-count">{pendingApplications}</span> : null}</NavLink>)}</nav><div className="sidebar-bottom"><div className="user-mini"><Avatar user={userForAvatar} size="sm" /><div><strong>{displayName}</strong><span>@{user.username}</span></div><Icon name="chevron" size={15} /></div></div></aside><div className="dashboard-content"><div className="dashboard-mobilebar"><button className="menu-button" onClick={() => setOpen(true)} aria-label="Open sidebar"><Icon name="menu" /></button><Logo /><button className="icon-button" aria-label="Notifications"><Icon name="bell" /></button></div>{children}</div></div>
 }
 
 export function ActivityPanel({ title = 'Recent activity', items = activities }) { return <div className="panel activity-panel"><div className="panel-heading"><h3>{title}</h3><Link to="/dashboard">View all</Link></div><div>{items.map((activity, index) => <ActivityItem activity={activity} key={`${activity.person}-${index}`} />)}</div></div> }

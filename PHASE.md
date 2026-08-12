@@ -50,7 +50,7 @@ Completed Phase 3 on the React side:
 - Profile settings load and save through the authenticated profile API
 - Developer results have backend pagination and previous/next controls
 
-## Phase 4 — Projects and roles ⏳ Planned
+## Phase 4 — Projects and roles ✅ Completed
 
 Create the core project data model and APIs so project cards, details pages, and project creation use database data rather than `mockData.js`.
 
@@ -64,7 +64,17 @@ Build:
 - Backend search, filtering, sorting, and pagination
 - Owner authorization: only project owners can change their projects
 
-## Phase 5 — Membership and applications ⏳ Planned
+Completed in this phase:
+
+- Project and project-role database models with migrations and admin support
+- Public project list/detail APIs with search, filtering, sorting, and pagination
+- Authenticated project creation with draft and published workflows
+- Owner-only project updates, publishing, and archiving
+- Role validation and replacement during project edits
+- React project discovery, detail, and create screens connected to the Django API
+- Automated API coverage for authentication, visibility, workflows, filtering, roles, and owner authorization
+
+## Phase 5 — Membership and applications ✅ Completed
 
 Implement the workflow for people joining projects or applying for open roles.
 
@@ -77,7 +87,17 @@ Build:
 - Duplicate-application and capacity checks
 - Sent and received applications for the dashboard
 
-## Phase 6 — Dashboard, teams, and activity ⏳ Planned
+Completed in this phase:
+
+- Project membership and member-role models with owner membership bootstrapping
+- Immediate join-project workflow with duplicate and team-capacity checks
+- Role application workflow with pending, accepted, withdrawn, and rejected states
+- Applicant withdrawal and owner-only accept/reject actions with atomic membership creation
+- Project member, personal membership, and sent/received application APIs
+- Live project detail join/apply actions and connected application and team dashboard pages
+- Backend API tests covering membership, duplicate applications, withdrawal, review permissions, and capacity-related workflows
+
+## Phase 6 — Dashboard, teams, and activity ✅ Completed
 
 Provide the real data behind the workspace pages.
 
@@ -88,6 +108,16 @@ Build:
 - Team/member directory for each project
 - Activity events such as project creation, membership changes, and application decisions
 - Personalised project recommendations based on skills and availability
+
+Completed in this phase:
+
+- Authenticated dashboard summary API with owned and contributing project data
+- Persisted activity events for project creation/publication, membership changes, and application submissions, decisions, and withdrawals
+- Skill and availability-based project recommendations with match scores and reasons
+- Live React dashboard and My Projects pages backed by the new APIs
+- Project-by-project live team/member directory with profile links
+- Dynamic application review count in the workspace navigation
+- Automated API coverage for dashboard counts, activity visibility, and recommendations
 
 ## Phase 7 — Notifications and preferences ⏳ Planned
 

@@ -154,6 +154,10 @@
 /* Design-system polish: softer surfaces, higher-contrast ink, and a more
    confident indigo accent without changing the page structure. */
 .site-header { background: rgba(248, 250, 252, .92); }
+.team-directory-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+.team-directory-grid .developer-card { min-width: 0; }
+@media (max-width: 1000px) { .team-directory-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .team-directory-grid { grid-template-columns: 1fr; } }
 .soft-section { background: #f1f4f8; }
 .site-footer { background: #f0f3f7; }
 .auth-brand-panel { background: #172033; }
