@@ -1,0 +1,156 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ team.name }} — RepoTeam{% endblock %}
+
+{% block content %}
+
+<section class="team-page">
+
+    <a href="{% url 'dashboard' %}" class="back-link">
+        ← Back to dashboard
+    </a>
+
+    <header class="team-header">
+
+        <div class="team-header-main">
+
+            <div class="team-large-icon">
+                {{ team.name|first|upper }}
+            </div>
+
+            <div>
+                <p class="eyebrow">Team workspace</p>
+                <h1>{{ team.name }}</h1>
+
+                {% if team.description %}
+                    <p>{{ team.description }}</p>
+                {% else %}
+                    <p class="muted">
+                        No description provided.
+                    </p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="team-header-actions">
+            <a href="#" class="button button-primary">
+                + Create project
+            </a>
+        </div>
+
+    </header>
+
+
+    <div class="team-content">
+
+        <section class="team-section">
+
+            <div class="section-header">
+                <div>
+                    <h2>Members</h2>
+                    <p>
+                        {{ memberships|length }}
+                        member{{ memberships|length|pluralize }}
+                        in this team.
+                    </p>
+                </div>
+
+                <a href="#" class="button button-secondary">
+                    + Add member
+                </a>
+            </div>
+
+
+            <div class="members-list">
+
+                {% for membership in memberships %}
+
+                    <div class="member-row">
+
+                        <div class="member-avatar">
+                            {{ membership.user.username|first|upper }}
+                        </div>
+
+                        <div class="member-info">
+                            <strong>
+                                {{ membership.user.username }}
+                            </strong>
+
+                            {% if membership.user.email %}
+                                <span>
+                                    {{ membership.user.email }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="member-role
+                            {% if membership.role == 'O' %}
+                                role-owner
+                            {% elif membership.role == 'A' %}
+                                role-admin
+                            {% else %}
+                                role-member
+                            {% endif %}
+                        ">
+                            {{ membership.get_role_display }}
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty-state">
+                        <div class="empty-icon">+</div>
+
+                        <h3>No members</h3>
+
+                        <p>
+                            This team doesn't have any members yet.
+                        </p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <section class="team-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Projects</h2>
+                    <p>
+                        Projects belonging to this team.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="empty-state">
+
+                <div class="empty-icon">+</div>
+
+                <h3>No projects yet</h3>
+
+                <p>
+                    Create a project to start organizing
+                    your team's work.
+                </p>
+
+                <a href="#" class="button button-primary">
+                    Create project
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import RegistrationForm, TeamForm
 from django.contrib import messages
 from .models import Team, Membership, Project, Issue, Comment
+from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 def index(request):
     return render(request, 'core/index.html')
@@ -52,3 +53,27 @@ def create_team(request):
         form = TeamForm()
 
     return render(request, "core/create_team.html", {"form": form})
+
+
+def team_detail(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+
+    membership = Membership.objects.filter(
+        user=request.user,
+        team=team
+    ).first()
+
+    if membership is None:
+        return redirect("dashboard")
+
+    memberships = Membership.objects.filter(team=team)
+
+    return render(
+        request,
+        "core/team_detail.html",
+        {
+            "team": team,
+            "membership": membership,
+            "memberships": memberships,
+        }
+    )
