@@ -1,11 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RepoTeam</title>
-</head>
-<body>
-    <h1>RepoTeam</h1>
-</body>
-</html>
+{% extends "core/base.html" %}
+
+{% block title %}RepoTeam — Collaborate and Build{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    {% if user.is_authenticated %}
+
+        <div class="hero-content">
+            <p class="eyebrow">Welcome back</p>
+
+            <h1>
+                Build better,
+                <span>together.</span>
+            </h1>
+
+            <p class="hero-description">
+                Welcome back, {{ user.username }}.
+                RepoTeam gives your team a structured place
+                to organize software projects and manage work.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#" class="button button-primary">
+                    Your workspace
+                </a>
+            </div>
+        </div>
+
+    {% else %}
+
+        <div class="hero-content">
+            <p class="eyebrow">Collaborative development</p>
+
+            <h1>
+                Build better,
+                <span>together.</span>
+            </h1>
+
+            <p class="hero-description">
+                RepoTeam gives software teams a central place
+                to organize projects, manage issues, assign work,
+                and collaborate.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{% url 'register' %}" class="button button-primary">
+                    Get started
+                </a>
+
+                <a href="{% url 'login' %}" class="button button-secondary">
+                    Sign in
+                </a>
+            </div>
+        </div>
+
+    {% endif %}
+
+</section>
+
+<section class="home-features">
+
+    <div class="feature">
+        <div class="feature-icon">01</div>
+        <h2>Organize projects</h2>
+        <p>
+            Keep your team's software projects structured
+            and easy to manage.
+        </p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">02</div>
+        <h2>Manage work</h2>
+        <p>
+            Create issues, assign work, and keep track of
+            what needs to be done.
+        </p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">03</div>
+        <h2>Work together</h2>
+        <p>
+            Give your team a shared workspace for
+            development-related collaboration.
+        </p>
+    </div>
+
+</section>
+
+{% endblock %}
