@@ -161,9 +161,9 @@
                         Created by {{ project.created_by.username }}
                     </span>
 
-                    <a href="#">
-                        View project
-                    </a>
+<a href="{% url 'project_detail' project.id %}">
+    View project
+</a>
                 </div>
 
             </article>

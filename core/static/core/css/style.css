@@ -946,3 +946,134 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Project Details */
+
+.project-page {
+    padding: 10px 0 60px;
+}
+
+.project-page > .back-link {
+    margin-bottom: 30px;
+}
+
+.project-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.project-header h1 {
+    margin: 0;
+    font-size: 38px;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: #111827;
+}
+
+.project-header p:last-child {
+    max-width: 650px;
+    margin: 10px 0 0;
+    color: #6b7280;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.project-section {
+    margin-top: 38px;
+}
+
+.issues-list {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.issue-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 18px 20px;
+    border-bottom: 1px solid #f0f1f3;
+}
+
+.issue-card:last-child {
+    border-bottom: none;
+}
+
+.issue-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    min-width: 0;
+}
+
+.issue-status {
+    flex-shrink: 0;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.issue-card h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 15px;
+}
+
+.issue-card p {
+    margin: 5px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.issue-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.priority-badge {
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: #f9fafb;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+
+    .project-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .project-header .button {
+        width: 100%;
+    }
+
+    .project-header h1 {
+        font-size: 32px;
+    }
+
+    .issue-card {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .issue-meta {
+        padding-left: 53px;
+    }
+}

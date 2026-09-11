@@ -1,0 +1,127 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ project.name }} — RepoTeam{% endblock %}
+
+{% block content %}
+
+<section class="project-page">
+
+    <a href="{% url 'team_detail' project.team.id %}" class="back-link">
+        ← Back to {{ project.team.name }}
+    </a>
+
+    <header class="project-header">
+
+        <div>
+            <p class="eyebrow">Project</p>
+
+            <h1>{{ project.name }}</h1>
+
+            {% if project.description %}
+                <p>{{ project.description }}</p>
+            {% else %}
+                <p class="muted">
+                    No description provided.
+                </p>
+            {% endif %}
+        </div>
+
+        <a href="#" class="button button-primary">
+            + Create issue
+        </a>
+
+    </header>
+
+
+    <section class="project-section">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Issues</h2>
+
+                <p>
+                    {{ issues|length }}
+                    issue{{ issues|length|pluralize }}
+                    in this project.
+                </p>
+            </div>
+
+        </div>
+
+
+        {% if issues %}
+
+            <div class="issues-list">
+
+                {% for issue in issues %}
+
+                    <article class="issue-card">
+
+                        <div class="issue-main">
+
+                            <div class="issue-status">
+                                {{ issue.get_status_display }}
+                            </div>
+
+                            <div>
+                                <h3>{{ issue.title }}</h3>
+
+                                {% if issue.description %}
+                                    <p>{{ issue.description }}</p>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                        <div class="issue-meta">
+
+                            <span class="priority-badge">
+                                {{ issue.get_priority_display }}
+                            </span>
+
+                            {% if issue.assigned_to %}
+                                <span>
+                                    Assigned to
+                                    {{ issue.assigned_to.username }}
+                                </span>
+                            {% else %}
+                                <span>
+                                    Unassigned
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">+</div>
+
+                <h3>No issues yet</h3>
+
+                <p>
+                    Create an issue to start tracking
+                    work for this project.
+                </p>
+
+                <a href="#" class="button button-primary">
+                    Create issue
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

@@ -3,6 +3,7 @@ from .forms import RegistrationForm, TeamForm, ProjectForm
 from django.contrib import messages
 from .models import Team, Membership, Project, Issue, Comment
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
     return render(request, 'core/index.html')
@@ -20,7 +21,7 @@ def register(request):
         
     return render(request, 'core/register.html', {'form': form})
 
-
+@login_required
 def dashboard(request):
     if request.user.is_authenticated:
         memberships = Membership.objects.filter(user=request.user)
@@ -31,7 +32,7 @@ def dashboard(request):
             'core/dashboard.html',
             {'teams': teams}
         )
-    
+@login_required  
 def create_team(request):
     if request.method == "POST":
         form = TeamForm(request.POST)
@@ -54,7 +55,7 @@ def create_team(request):
 
     return render(request, "core/create_team.html", {"form": form})
 
-
+@login_required
 def team_detail(request, team_id):
     team = get_object_or_404(Team, id=team_id)
 
@@ -80,7 +81,7 @@ def team_detail(request, team_id):
         }
     )
 
-
+@login_required
 def create_project(request, team_id):
     team = get_object_or_404(Team, id=team_id)
 
@@ -112,5 +113,29 @@ def create_project(request, team_id):
         {
             "form": form,
             "team": team,
+        }
+    )
+
+
+def project_detail(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+
+    membership = Membership.objects.filter(
+        user=request.user,
+        team=project.team
+    ).first()
+
+    if membership is None:
+        return redirect("dashboard")
+
+    issues = Issue.objects.filter(project=project)
+
+    return render(
+        request,
+        "core/project_detail.html",
+        {
+            "project": project,
+            "issues": issues,
+            "membership": membership,
         }
     )
