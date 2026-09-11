@@ -235,3 +235,251 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Dashboard */
+
+.dashboard {
+    padding: 20px 0 60px;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 38px;
+    letter-spacing: -0.04em;
+    color: #111827;
+}
+
+.dashboard-subtitle {
+    margin: 10px 0 0;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.stat-card {
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.stat-label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.stat-card strong {
+    display: block;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: #111827;
+}
+
+.stat-description {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.dashboard-section {
+    margin-top: 20px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: #111827;
+}
+
+.section-header p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.team-card {
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    transition: border-color 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+.team-card:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 4px 14px rgba(17, 24, 39, 0.05);
+}
+
+.team-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.team-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.team-arrow {
+    color: #9ca3af;
+    font-size: 18px;
+}
+
+.team-card h3 {
+    margin: 20px 0 8px;
+    font-size: 17px;
+    color: #111827;
+}
+
+.team-card > p {
+    margin: 0;
+    min-height: 44px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+.team-card .team-no-description {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.team-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f1f3;
+}
+
+.team-card-footer span {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.team-card-footer a {
+    color: #111827;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.team-card-footer a:hover {
+    text-decoration: underline;
+}
+
+.empty-state {
+    padding: 60px 30px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px dashed #d1d5db;
+    border-radius: 10px;
+}
+
+.empty-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 22px;
+}
+
+.empty-state h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #111827;
+}
+
+.empty-state p {
+    max-width: 400px;
+    margin: 10px auto 22px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+
+/* Dashboard responsive */
+
+@media (max-width: 700px) {
+
+    .dashboard {
+        padding-top: 5px;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 30px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 32px;
+    }
+
+    .dashboard-header .button {
+        width: auto;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        margin-bottom: 36px;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .empty-state {
+        padding: 45px 20px;
+    }
+}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from django.contrib import messages
+from .models import Team, Membership, Project, Issue, Comment
 # Create your views here.
 def index(request):
     return render(request, 'core/index.html')
@@ -17,3 +18,15 @@ def register(request):
         form = RegistrationForm()
         
     return render(request, 'core/register.html', {'form': form})
+
+
+def dashboard(request):
+    if request.user.is_authenticated:
+        memberships = Membership.objects.filter(user=request.user)
+        teams = [membership.team for membership in memberships]
+
+        return render(
+            request,
+            'core/dashboard.html',
+            {'teams': teams}
+        )

@@ -1,0 +1,122 @@
+{% extends "core/base.html" %}
+
+{% block title %}Dashboard — RepoTeam{% endblock %}
+
+{% block content %}
+
+<section class="dashboard">
+
+    <div class="dashboard-header">
+        <div>
+            <p class="eyebrow">Workspace</p>
+            <h1>Dashboard</h1>
+            <p class="dashboard-subtitle">
+                Welcome back, {{ user.username }}. Here's what's happening
+                with your teams.
+            </p>
+        </div>
+
+        <a href="#" class="button button-primary">
+            + Create team
+        </a>
+    </div>
+
+
+    <section class="dashboard-stats">
+
+        <div class="stat-card">
+            <span class="stat-label">Teams</span>
+            <strong>{{ teams|length }}</strong>
+            <span class="stat-description">Teams you're part of</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">Projects</span>
+            <strong>—</strong>
+            <span class="stat-description">Projects across your teams</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">Open issues</span>
+            <strong>—</strong>
+            <span class="stat-description">Issues that need attention</span>
+        </div>
+
+    </section>
+
+
+    <section class="dashboard-section">
+
+        <div class="section-header">
+            <div>
+                <h2>Your teams</h2>
+                <p>Teams and workspaces you're currently part of.</p>
+            </div>
+        </div>
+
+
+        {% if teams %}
+
+            <div class="team-grid">
+
+                {% for team in teams %}
+
+                    <article class="team-card">
+
+                        <div class="team-card-top">
+                            <div class="team-icon">
+                                {{ team.name|first|upper }}
+                            </div>
+
+                            <span class="team-arrow">→</span>
+                        </div>
+
+                        <h3>{{ team.name }}</h3>
+
+                        {% if team.description %}
+                            <p>{{ team.description }}</p>
+                        {% else %}
+                            <p class="team-no-description">
+                                No description provided.
+                            </p>
+                        {% endif %}
+
+                        <div class="team-card-footer">
+                            <span>Team workspace</span>
+                            <a href="#">
+                                View team
+                            </a>
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">+</div>
+
+                <h3>No teams yet</h3>
+
+                <p>
+                    Create your first team and start building
+                    something together.
+                </p>
+
+                <a href="#" class="button button-primary">
+                    Create your first team
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}
