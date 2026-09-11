@@ -21,4 +21,9 @@ urlpatterns = [
     views.team_detail,
     name="team_detail"
 ),
+path(
+    "teams/<int:team_id>/projects/create/",
+    views.create_project,
+    name="create_project"
+),
 ]

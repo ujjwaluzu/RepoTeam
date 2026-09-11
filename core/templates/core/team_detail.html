@@ -34,9 +34,9 @@
         </div>
 
         <div class="team-header-actions">
-            <a href="#" class="button button-primary">
-                + Create project
-            </a>
+<a href="{% url 'create_project' team.id %}" class="button button-primary">
+    + Create project
+</a>
         </div>
 
     </header>
@@ -130,22 +130,71 @@
 
             </div>
 
-            <div class="empty-state">
+{% if projects %}
 
-                <div class="empty-icon">+</div>
+    <div class="project-grid">
 
-                <h3>No projects yet</h3>
+        {% for project in projects %}
 
-                <p>
-                    Create a project to start organizing
-                    your team's work.
-                </p>
+            <article class="project-card">
 
-                <a href="#" class="button button-primary">
-                    Create project
-                </a>
+                <div class="project-card-top">
+                    <div class="project-icon">
+                        {{ project.name|first|upper }}
+                    </div>
 
-            </div>
+                    <span class="project-arrow">→</span>
+                </div>
+
+                <h3>{{ project.name }}</h3>
+
+                {% if project.description %}
+                    <p>{{ project.description }}</p>
+                {% else %}
+                    <p class="project-no-description">
+                        No description provided.
+                    </p>
+                {% endif %}
+
+                <div class="project-card-footer">
+                    <span>
+                        Created by {{ project.created_by.username }}
+                    </span>
+
+                    <a href="#">
+                        View project
+                    </a>
+                </div>
+
+            </article>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">+</div>
+
+        <h3>No projects yet</h3>
+
+        <p>
+            Create a project to start organizing
+            your team's work.
+        </p>
+
+        <a
+            href="{% url 'create_project' team.id %}"
+            class="button button-primary"
+        >
+            Create project
+        </a>
+
+    </div>
+
+{% endif %}
 
         </section>
 

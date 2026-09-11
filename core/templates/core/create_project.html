@@ -1,0 +1,104 @@
+{% extends "core/base.html" %}
+
+{% block title %}Create Project — RepoTeam{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <div class="form-container">
+
+        <div class="form-header">
+
+            <a href="{% url 'team_detail' team.id %}" class="back-link">
+                ← Back to {{ team.name }}
+            </a>
+
+            <p class="eyebrow">New project</p>
+
+            <h1>Create a project</h1>
+
+            <p>
+                Create a project inside
+                <strong>{{ team.name }}</strong>
+                and start organizing your team's work.
+            </p>
+
+        </div>
+
+
+        <form method="post" class="app-form">
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+
+            <div class="form-field">
+
+                <label for="{{ form.name.id_for_label }}">
+                    Project name
+                </label>
+
+                {{ form.name }}
+
+                {% if form.name.errors %}
+                    <div class="field-error">
+                        {{ form.name.errors }}
+                    </div>
+                {% endif %}
+
+                <span class="field-help">
+                    Give your project a clear and recognizable name.
+                </span>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
+
+                {{ form.description }}
+
+                {% if form.description.errors %}
+                    <div class="field-error">
+                        {{ form.description.errors }}
+                    </div>
+                {% endif %}
+
+                <span class="field-help">
+                    Briefly describe what you're building.
+                </span>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'team_detail' team.id %}"
+                    class="button button-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button type="submit" class="button button-primary">
+                    Create project
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

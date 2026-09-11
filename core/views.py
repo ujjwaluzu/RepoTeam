@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .forms import RegistrationForm, TeamForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import RegistrationForm, TeamForm, ProjectForm
 from django.contrib import messages
 from .models import Team, Membership, Project, Issue, Comment
 from django.shortcuts import render, redirect, get_object_or_404
@@ -67,6 +67,7 @@ def team_detail(request, team_id):
         return redirect("dashboard")
 
     memberships = Membership.objects.filter(team=team)
+    projects = Project.objects.filter(team=team)
 
     return render(
         request,
@@ -75,5 +76,41 @@ def team_detail(request, team_id):
             "team": team,
             "membership": membership,
             "memberships": memberships,
+            "projects": projects,
+        }
+    )
+
+
+def create_project(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+
+    membership = Membership.objects.filter(
+        user=request.user,
+        team=team
+    ).first()
+
+    if membership is None:
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        form = ProjectForm(request.POST)
+
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.team = team
+            project.created_by = request.user
+            project.save()
+
+            return redirect("team_detail", team_id=team.id)
+
+    else:
+        form = ProjectForm()
+
+    return render(
+        request,
+        "core/create_project.html",
+        {
+            "form": form,
+            "team": team,
         }
     )
