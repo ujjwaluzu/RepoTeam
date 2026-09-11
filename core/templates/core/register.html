@@ -1,0 +1,176 @@
+{% extends "core/base.html" %}
+
+{% block title %}Create Account — RepoTeam{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 144px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .auth-header {
+        margin-bottom: 28px;
+        text-align: center;
+    }
+
+    .auth-header h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        color: #111827;
+    }
+
+    .auth-header p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 7px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .form-group input:focus {
+        border-color: #111827;
+        box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+    }
+
+    .help-text {
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .field-errors {
+        margin-top: 6px;
+        color: #b91c1c;
+        font-size: 12px;
+    }
+
+    .register-button {
+        width: 100%;
+        border: none;
+        border-radius: 7px;
+        padding: 12px;
+        background: #111827;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .register-button:hover {
+        opacity: 0.9;
+    }
+
+    .auth-footer {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .auth-footer a {
+        color: #111827;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+        .auth-card {
+            padding: 24px 20px;
+        }
+
+        .auth-header h1 {
+            font-size: 24px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <h1>Create your account</h1>
+            <p>Join RepoTeam and start building together</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+
+                    {{ field.label_tag }}
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <div class="help-text">
+                            {{ field.help_text|safe }}
+                        </div>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <div class="field-errors">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="field-errors">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="register-button">
+                Create account
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account?
+            <a href="{% url 'login' %}">Sign in</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

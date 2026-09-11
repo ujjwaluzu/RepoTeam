@@ -1,0 +1,164 @@
+{% extends "core/base.html" %}
+
+{% block title %}Login — RepoTeam{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 144px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .auth-header {
+        margin-bottom: 28px;
+        text-align: center;
+    }
+
+    .auth-header h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        color: #111827;
+    }
+
+    .auth-header p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 7px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-group input:focus {
+        border-color: #111827;
+        box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+    }
+
+    .form-errors {
+        margin-bottom: 18px;
+        padding: 10px 12px;
+        border-radius: 7px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        font-size: 13px;
+    }
+
+    .login-button {
+        width: 100%;
+        border: none;
+        border-radius: 7px;
+        padding: 12px;
+        background: #111827;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s;
+    }
+
+    .login-button:hover {
+        opacity: 0.9;
+    }
+
+    .auth-footer {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .auth-footer a {
+        color: #111827;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+        .auth-card {
+            padding: 24px 20px;
+            border-radius: 10px;
+        }
+
+        .auth-header h1 {
+            font-size: 24px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <h1>Welcome back</h1>
+            <p>Sign in to your RepoTeam account</p>
+        </div>
+
+        {% if form.errors %}
+            <div class="form-errors">
+                Your username or password is incorrect.
+                Please try again.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="login-button">
+                Sign in
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Don't have an account?
+            <a href="{% url 'register' %}">Create one</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
