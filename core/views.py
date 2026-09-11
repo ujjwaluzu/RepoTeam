@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm
+from .forms import RegistrationForm, TeamForm
 from django.contrib import messages
 from .models import Team, Membership, Project, Issue, Comment
 # Create your views here.
@@ -30,3 +30,25 @@ def dashboard(request):
             'core/dashboard.html',
             {'teams': teams}
         )
+    
+def create_team(request):
+    if request.method == "POST":
+        form = TeamForm(request.POST)
+
+        if form.is_valid():
+            team = form.save(commit=False)
+            team.created_by = request.user
+            team.save()
+
+            Membership.objects.create(
+                user=request.user,
+                team=team,
+                role=Membership.Role.OWNER
+            )
+
+            return redirect("dashboard")
+
+    else:
+        form = TeamForm()
+
+    return render(request, "core/create_team.html", {"form": form})

@@ -483,3 +483,170 @@
         padding: 45px 20px;
     }
 }
+
+/* Create Team */
+
+.form-page {
+    min-height: calc(100vh - 144px);
+    display: flex;
+    justify-content: center;
+    padding: 30px 0 60px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.form-header {
+    margin-bottom: 32px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 28px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #111827;
+}
+
+.form-header h1 {
+    margin: 0;
+    font-size: 36px;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: #111827;
+}
+
+.form-header > p:last-child {
+    max-width: 500px;
+    margin: 12px 0 0;
+    color: #6b7280;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.app-form {
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.form-field {
+    margin-bottom: 24px;
+}
+
+.form-field:last-of-type {
+    margin-bottom: 28px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #111827;
+    font: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+.form-field input {
+    height: 44px;
+}
+
+.form-field textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+    border-color: #6b7280;
+    box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.12);
+}
+
+.field-help {
+    display: block;
+    margin-top: 7px;
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.form-errors,
+.field-error {
+    color: #b91c1c;
+    font-size: 13px;
+}
+
+.form-errors {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+    background: #fef2f2;
+}
+
+.field-error {
+    margin-top: 6px;
+}
+
+.field-error ul,
+.form-errors ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+    border-top: 1px solid #f0f1f3;
+}
+
+.form-actions .button {
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+
+    .form-page {
+        padding-top: 10px;
+    }
+
+    .form-header h1 {
+        font-size: 32px;
+    }
+
+    .app-form {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .button {
+        width: 100%;
+    }
+}

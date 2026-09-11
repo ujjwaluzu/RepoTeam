@@ -15,4 +15,5 @@ urlpatterns = [
     ),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path("teams/create/", views.create_team, name="create_team"),
 ]

@@ -1,0 +1,88 @@
+{% extends "core/base.html" %}
+
+{% block title %}Create Team — RepoTeam{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <a href="{% url 'dashboard' %}" class="back-link">
+                ← Back to dashboard
+            </a>
+
+            <p class="eyebrow">New workspace</p>
+
+            <h1>Create a team</h1>
+
+            <p>
+                Create a workspace for your team and start
+                organizing your projects together.
+            </p>
+        </div>
+
+        <form method="post" class="app-form">
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-field">
+                <label for="{{ form.name.id_for_label }}">
+                    Team name
+                </label>
+
+                {{ form.name }}
+
+                {% if form.name.errors %}
+                    <div class="field-error">
+                        {{ form.name.errors }}
+                    </div>
+                {% endif %}
+
+                <span class="field-help">
+                    Choose a name your team will recognize.
+                </span>
+            </div>
+
+            <div class="form-field">
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
+
+                {{ form.description }}
+
+                {% if form.description.errors %}
+                    <div class="field-error">
+                        {{ form.description.errors }}
+                    </div>
+                {% endif %}
+
+                <span class="field-help">
+                    Tell your team what this workspace is for.
+                </span>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'dashboard' %}" class="button button-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit" class="button button-primary">
+                    Create team
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}
