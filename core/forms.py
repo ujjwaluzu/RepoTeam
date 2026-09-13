@@ -39,3 +39,14 @@ class IssueForm(forms.ModelForm):
 
         if assigned_users is not None:
             self.fields["assigned_to"].queryset = assigned_users
+        
+class InviteMemberForm(forms.Form):
+    username = forms.CharField(
+        max_length=150,
+        label="Username",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Enter a username",
+            }
+        ),
+    )

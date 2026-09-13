@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistrationForm, TeamForm, ProjectForm, IssueForm
+from .forms import RegistrationForm, TeamForm, ProjectForm, IssueForm, InviteMemberForm
 from django.contrib import messages
 from .models import Team, Membership, Project, Issue, Comment
 from django.shortcuts import render, redirect, get_object_or_404
@@ -284,4 +284,78 @@ def delete_issue(request, issue_id):
         request,
         "core/delete_issue.html",
         {"issue": issue},
+    )
+
+
+@login_required
+def invite_member(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+
+    membership = Membership.objects.filter(
+        user=request.user,
+        team=team,
+    ).first()
+
+    if membership is None:
+        return redirect("dashboard")
+
+    if membership.role not in [
+        Membership.Role.OWNER,
+        Membership.Role.ADMIN,
+    ]:
+        messages.error(
+            request,
+            "Only team owners and admins can invite members.",
+        )
+        return redirect("team_detail", team_id=team.id)
+
+    if request.method == "POST":
+        form = InviteMemberForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+
+            invited_user = User.objects.filter(
+                username=username
+            ).first()
+
+            if invited_user is None:
+                form.add_error(
+                    "username",
+                    "No user exists with that username.",
+                )
+            elif Membership.objects.filter(
+                user=invited_user,
+                team=team,
+            ).exists():
+                form.add_error(
+                    "username",
+                    "This user is already a team member.",
+                )
+            else:
+                Membership.objects.create(
+                    user=invited_user,
+                    team=team,
+                    role=Membership.Role.MEMBER,
+                )
+
+                messages.success(
+                    request,
+                    f"{username} was added to the team.",
+                )
+
+                return redirect(
+                    "team_detail",
+                    team_id=team.id,
+                )
+    else:
+        form = InviteMemberForm()
+
+    return render(
+        request,
+        "core/invite_member.html",
+        {
+            "form": form,
+            "team": team,
+        },
     )

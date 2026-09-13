@@ -46,5 +46,10 @@ path(
     views.delete_issue,
     name="delete_issue",
 ),
+path(
+    "teams/<int:team_id>/invite/",
+    views.invite_member,
+    name="invite_member",
+),
 ]
 

@@ -56,9 +56,14 @@
                     </p>
                 </div>
 
-                <a href="#" class="button button-secondary">
-                    + Add member
-                </a>
+{% if membership.role == "O" or membership.role == "A" %}
+    <a
+        href="{% url 'invite_member' team.id %}"
+        class="button button-secondary"
+    >
+        + Add member
+    </a>
+{% endif %}
             </div>
 
 
