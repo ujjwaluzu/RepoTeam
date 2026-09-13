@@ -77,12 +77,6 @@
 
                         </div>
 
-                                                <a
-    href="{% url 'edit_issue' issue.id %}"
-    class="button button-secondary"
->
-    Edit
-</a>
 
 
                         <div class="issue-meta">
@@ -104,7 +98,20 @@
 
                         </div>
 
+                                                                        <a
+    href="{% url 'edit_issue' issue.id %}"
+    class="button button-secondary"
+>
+    Edit
+</a>
 
+
+<a
+    href="{% url 'delete_issue' issue.id %}"
+    class="button button-danger"
+>
+    Delete
+</a>
 
                     </article>
 

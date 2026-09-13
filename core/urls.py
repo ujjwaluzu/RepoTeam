@@ -41,5 +41,10 @@ path(
     views.edit_issue,
     name="edit_issue",
 ),
+path(
+    "issues/<int:issue_id>/delete/",
+    views.delete_issue,
+    name="delete_issue",
+),
 ]
 

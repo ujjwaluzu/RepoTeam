@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+
+{% block title %}Delete Issue · RepoTeam{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="form-header">
+        <a
+            href="{% url 'project_detail' issue.project.id %}"
+            class="back-link"
+        >
+            ← Back to project
+        </a>
+
+        <h1>Delete issue</h1>
+
+        <p>
+            Are you sure you want to delete
+            <strong>{{ issue.title }}</strong>?
+        </p>
+
+        <p class="warning-text">
+            This action cannot be undone.
+        </p>
+    </div>
+
+    <form method="post" class="form-actions">
+        {% csrf_token %}
+
+        <a
+            href="{% url 'project_detail' issue.project.id %}"
+            class="button button-secondary"
+        >
+            Cancel
+        </a>
+
+        <button type="submit" class="button button-danger">
+            Delete issue
+        </button>
+    </form>
+</section>
+{% endblock %}

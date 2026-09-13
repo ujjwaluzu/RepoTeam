@@ -253,3 +253,35 @@ def edit_issue(request, issue_id):
             "issue": issue,
         },
     )
+
+@login_required
+def delete_issue(request, issue_id):
+    issue = get_object_or_404(Issue, id=issue_id)
+
+    membership = Membership.objects.filter(
+        user=request.user,
+        team=issue.project.team,
+    ).first()
+
+    if membership is None:
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        project_id = issue.project.id
+        issue.delete()
+
+        messages.success(
+            request,
+            "Issue deleted successfully.",
+        )
+
+        return redirect(
+            "project_detail",
+            project_id=project_id,
+        )
+
+    return render(
+        request,
+        "core/delete_issue.html",
+        {"issue": issue},
+    )
