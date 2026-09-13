@@ -26,9 +26,12 @@
             {% endif %}
         </div>
 
-        <a href="#" class="button button-primary">
-            + Create issue
-        </a>
+<a
+    href="{% url 'create_issue' project.id %}"
+    class="button button-primary"
+>
+    + Create issue
+</a>
 
     </header>
 
@@ -112,9 +115,12 @@
                     work for this project.
                 </p>
 
-                <a href="#" class="button button-primary">
-                    Create issue
-                </a>
+<a
+    href="{% url 'create_issue' project.id %}"
+    class="button button-primary"
+>
+    + Create issue
+</a>
 
             </div>
 

@@ -31,5 +31,10 @@ path(
     views.project_detail,
     name="project_detail"
 ),
+path(
+    "projects/<int:project_id>/issues/create/",
+    views.create_issue,
+    name="create_issue",
+),
 ]
 

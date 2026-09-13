@@ -537,7 +537,30 @@
     border: 1px solid #e5e7eb;
     border-radius: 10px;
 }
+.app-form input,
+.app-form textarea,
+.app-form select {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    font: inherit;
+    box-sizing: border-box;
+}
 
+.app-form input:focus,
+.app-form textarea:focus,
+.app-form select:focus {
+    outline: none;
+    border-color: #111827;
+}
+
+.app-form textarea {
+    min-height: 140px;
+    resize: vertical;
+}
 .form-field {
     margin-bottom: 24px;
 }

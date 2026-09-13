@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistrationForm, TeamForm, ProjectForm
+from .forms import RegistrationForm, TeamForm, ProjectForm, IssueForm
 from django.contrib import messages
 from .models import Team, Membership, Project, Issue, Comment
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 # Create your views here.
 def index(request):
     return render(request, 'core/index.html')
@@ -138,4 +139,61 @@ def project_detail(request, project_id):
             "issues": issues,
             "membership": membership,
         }
+    )
+
+
+
+@login_required
+def create_issue(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+
+    membership = Membership.objects.filter(
+        user=request.user,
+        team=project.team,
+    ).first()
+
+    if membership is None:
+        return redirect("dashboard")
+
+    member_ids = Membership.objects.filter(
+        team=project.team
+    ).values_list("user_id", flat=True)
+
+    assigned_users = User.objects.filter(
+        id__in=member_ids
+    )
+
+    if request.method == "POST":
+        form = IssueForm(
+            request.POST,
+            assigned_users=assigned_users,
+        )
+
+        if form.is_valid():
+            issue = form.save(commit=False)
+            issue.project = project
+            issue.created_by = request.user
+            issue.save()
+
+            messages.success(
+                request,
+                "Issue created successfully.",
+            )
+
+            return redirect(
+                "project_detail",
+                project_id=project.id,
+            )
+    else:
+        form = IssueForm(
+            assigned_users=assigned_users,
+        )
+
+    return render(
+        request,
+        "core/create_issue.html",
+        {
+            "form": form,
+            "project": project,
+        },
     )

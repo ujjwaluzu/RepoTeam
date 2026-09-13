@@ -1,0 +1,98 @@
+{% extends "core/base.html" %}
+
+{% block title %}Create Issue · RepoTeam{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="form-header">
+        <a href="{% url 'project_detail' project.id %}" class="back-link">
+            ← Back to project
+        </a>
+
+        <h1>Create issue</h1>
+        <p>
+            Add a new issue to
+            <strong>{{ project.name }}</strong>.
+        </p>
+    </div>
+
+    <form method="post" class="app-form">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div class="form-field">
+            <label for="{{ form.title.id_for_label }}">
+                Title
+            </label>
+
+            {{ form.title }}
+
+            {% for error in form.title.errors %}
+                <p class="form-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.description.id_for_label }}">
+                Description
+            </label>
+
+            {{ form.description }}
+
+            {% for error in form.description.errors %}
+                <p class="form-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.status.id_for_label }}">
+                Status
+            </label>
+
+            {{ form.status }}
+
+            {% for error in form.status.errors %}
+                <p class="form-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.priority.id_for_label }}">
+                Priority
+            </label>
+
+            {{ form.priority }}
+
+            {% for error in form.priority.errors %}
+                <p class="form-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.assigned_to.id_for_label }}">
+                Assign to
+            </label>
+
+            {{ form.assigned_to }}
+
+            {% for error in form.assigned_to.errors %}
+                <p class="form-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions">
+            <a
+                href="{% url 'project_detail' project.id %}"
+                class="button button-secondary"
+            >
+                Cancel
+            </a>
+
+            <button type="submit" class="button button-primary">
+                Create issue
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %}
