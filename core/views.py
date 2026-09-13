@@ -197,3 +197,59 @@ def create_issue(request, project_id):
             "project": project,
         },
     )
+
+
+
+@login_required
+def edit_issue(request, issue_id):
+    issue = get_object_or_404(Issue, id=issue_id)
+
+    membership = Membership.objects.filter(
+        user=request.user,
+        team=issue.project.team,
+    ).first()
+
+    if membership is None:
+        return redirect("dashboard")
+
+    member_ids = Membership.objects.filter(
+        team=issue.project.team
+    ).values_list("user_id", flat=True)
+
+    assigned_users = User.objects.filter(
+        id__in=member_ids
+    )
+
+    if request.method == "POST":
+        form = IssueForm(
+            request.POST,
+            instance=issue,
+            assigned_users=assigned_users,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Issue updated successfully.",
+            )
+
+            return redirect(
+                "project_detail",
+                project_id=issue.project.id,
+            )
+    else:
+        form = IssueForm(
+            instance=issue,
+            assigned_users=assigned_users,
+        )
+
+    return render(
+        request,
+        "core/edit_issue.html",
+        {
+            "form": form,
+            "issue": issue,
+        },
+    )

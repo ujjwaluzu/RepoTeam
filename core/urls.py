@@ -36,5 +36,10 @@ path(
     views.create_issue,
     name="create_issue",
 ),
+path(
+    "issues/<int:issue_id>/edit/",
+    views.edit_issue,
+    name="edit_issue",
+),
 ]
 
