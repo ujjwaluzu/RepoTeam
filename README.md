@@ -2,9 +2,22 @@
 
 RepoTeam is a collaborative software project management platform built with Django. It gives development teams a central place to create teams, organize software projects, track issues, assign work, and collaborate on development-related work.
 
-The application is currently an MVP: it covers the core team-project-issue workflow with role-based access control and a polished, responsive interface.
+## Project Status
+
+> **MVP — Minimal Viable Product.** RepoTeam is currently an MVP designed to validate the core team-project-issue workflow. It is **not yet production-ready** and is under active development.
+
+The current scope of the MVP focuses on:
+
+- User accounts (registration, login, logout)
+- Team creation and member management with role-based access control
+- Project organization inside teams
+- Issue tracking with statuses, priorities, and assignment
+
+Anything beyond that — comment UIs, notifications, analytics, search, and so on — is listed under [Future Improvements](#future-improvements) and is **not part of the current codebase**.
 
 ## Features
+
+The following features are implemented in the current MVP:
 
 ### Accounts & Authentication
 
@@ -273,7 +286,7 @@ The test suite covers page rendering, issue CRUD flows, team/project/issue creat
 
 ## Future Improvements
 
-These are **planned or potential** improvements, not current features:
+These ideas go **beyond the current MVP** and are listed as planned or potential improvements only. None of these exist in the codebase today:
 
 - Real-time notifications
 - Activity feeds
