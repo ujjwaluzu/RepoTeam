@@ -53,10 +53,10 @@ The following features are implemented in the current MVP:
 - Delete issues with a confirmation step
 - Assign issues to any team member
 - Issue statuses:
-  - ✅ To Do
-  - 🔄 In Progress
-  - 👀 In Review
-  - ✅ Done
+  - To Do
+  - In Progress
+  - In Review
+  - Done
 - Issue priorities:
   - Low
   - Medium
@@ -213,30 +213,27 @@ Based on the permission checks implemented in `core/views.py`:
 ### Owner
 
 - Full team access
-- Invite members ✅
-- Remove members (including admins) ✅
-- Change member roles ✅
-- Create projects ✅
-- Create, edit, and delete issues ✅
+- Invite members 
+- Remove members (including admins) 
+- Change member roles 
+- Create projects 
+- Create, edit, and delete issues 
 - The owner's own membership **cannot** be removed or re-assigned
 
 ### Admin
 
 - Full team access
-- Invite members ✅
-- Remove members ✅, but **cannot** remove an owner or another admin (only the owner can remove an admin)
-- Change member roles ❌ (owner only)
-- Create projects ✅
-- Create, edit, and delete issues ✅
+- Invite members 
+- Remove members , but **cannot** remove an owner or another admin (only the owner can remove an admin)
+- Change member roles  (owner only)
+- Create projects 
+- Create, edit, and delete issues 
 
 ### Member
 
 - Read access to team workspace
-- Create projects ✅
-- Create, edit, and delete issues ✅
-- Invite members ❌
-- Remove members ❌
-- Change member roles ❌
+- Create projects 
+- Create, edit, and delete issues 
 
 All permission checks redirect unauthorized users back to the team page with a message, and non-members are redirected to the dashboard.
 
