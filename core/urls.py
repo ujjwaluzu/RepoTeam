@@ -56,5 +56,11 @@ path(
     views.remove_member,
     name="remove_member",
 ),
+
+path(
+    "teams/<int:team_id>/members/<int:user_id>/role/",
+    views.change_member_role,
+    name="change_member_role",
+),
 ]
 

@@ -426,3 +426,73 @@ def remove_member(request, team_id, user_id):
             "member": member,
         },
     )
+
+
+@login_required
+def change_member_role(request, team_id, user_id):
+    team = get_object_or_404(Team, id=team_id)
+
+    current_membership = Membership.objects.filter(
+        user=request.user,
+        team=team,
+    ).first()
+
+    if current_membership is None:
+        return redirect("dashboard")
+
+    if current_membership.role != Membership.Role.OWNER:
+        messages.error(
+            request,
+            "Only the team owner can change member roles.",
+        )
+        return redirect("team_detail", team_id=team.id)
+
+    member = get_object_or_404(
+        Membership,
+        team=team,
+        user_id=user_id,
+    )
+
+    if member.role == Membership.Role.OWNER:
+        messages.error(
+            request,
+            "The team owner's role cannot be changed.",
+        )
+        return redirect("team_detail", team_id=team.id)
+
+    if request.method == "POST":
+        new_role = request.POST.get("role")
+
+        valid_roles = [
+            Membership.Role.ADMIN,
+            Membership.Role.MEMBER,
+        ]
+
+        if new_role not in valid_roles:
+            messages.error(
+                request,
+                "Invalid role selected.",
+            )
+            return redirect("team_detail", team_id=team.id)
+
+        member.role = new_role
+        member.save(update_fields=["role"])
+
+        messages.success(
+            request,
+            f"{member.user.username}'s role was updated.",
+        )
+
+        return redirect(
+            "team_detail",
+            team_id=team.id,
+        )
+
+    return render(
+        request,
+        "core/change_member_role.html",
+        {
+            "team": team,
+            "member": member,
+        },
+    )

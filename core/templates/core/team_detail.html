@@ -104,7 +104,16 @@
                         ">
                             {{ team_member.get_role_display }}
                         </div>
-
+{% if membership.role == "O" %}
+    {% if team_member.role != "O" %}
+        <a
+            href="{% url 'change_member_role' team.id team_member.user.id %}"
+            class="button button-secondary"
+        >
+            Change role
+        </a>
+    {% endif %}
+{% endif %}
                         {% if membership.role == "O" or membership.role == "A" %}
                             {% if team_member.role != "O" %}
                                 <a
