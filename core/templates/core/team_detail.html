@@ -4,232 +4,140 @@
 
 {% block content %}
 
-<section class="team-page">
+<div class="page-container">
 
-    <a href="{% url 'dashboard' %}" class="back-link">
-        ← Back to dashboard
+    <a href="{% url 'dashboard' %}" class="page-header__back">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to dashboard
     </a>
 
-    <header class="team-header">
-
-        <div class="team-header-main">
-
-            <div class="team-large-icon">
+    <header class="team-detail__header">
+        <div class="team-detail__info">
+            <div class="avatar avatar--xl avatar--dark">
                 {{ team.name|first|upper }}
             </div>
-
-            <div>
-                <p class="eyebrow">Team workspace</p>
-
+            <div class="team-detail__text">
+                <span class="page-header__eyebrow">Team workspace</span>
                 <h1>{{ team.name }}</h1>
-
                 {% if team.description %}
                     <p>{{ team.description }}</p>
                 {% else %}
-                    <p class="muted">
-                        No description provided.
-                    </p>
+                    <p class="text-muted">No description provided.</p>
                 {% endif %}
             </div>
-
         </div>
-
-        <div class="team-header-actions">
-            <a
-                href="{% url 'create_project' team.id %}"
-                class="button button-primary"
-            >
-                + Create project
+        <div class="team-detail__actions">
+            <a href="{% url 'create_project' team.id %}" class="btn btn--primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Create project
             </a>
+            {% if membership.role == "O" or membership.role == "A" %}
+                <a href="{% url 'invite_member' team.id %}" class="btn btn--secondary">
+                    Add member
+                </a>
+            {% endif %}
         </div>
-
     </header>
 
-    <div class="team-content">
-
-        <section class="team-section">
-
-            <div class="section-header">
-                <div>
-                    <h2>Members</h2>
-
-                    <p>
-                        {{ memberships|length }}
-                        member{{ memberships|length|pluralize }}
-                        in this team.
-                    </p>
-                </div>
-
-                {% if membership.role == "O" or membership.role == "A" %}
-                    <a
-                        href="{% url 'invite_member' team.id %}"
-                        class="button button-secondary"
-                    >
-                        + Add member
-                    </a>
-                {% endif %}
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2>Members</h2>
+                <p class="section-header__description">
+                    {{ memberships|length }} member{{ memberships|length|pluralize }} in this team.
+                </p>
             </div>
+        </div>
 
-            <div class="members-list">
-
-                {% for team_member in memberships %}
-
-                    <div class="member-row">
-
-                        <div class="member-avatar">
-                            {{ team_member.user.username|first|upper }}
-                        </div>
-
-                        <div class="member-info">
-                            <strong>
-                                {{ team_member.user.username }}
-                            </strong>
-
-                            {% if team_member.user.email %}
-                                <span>
-                                    {{ team_member.user.email }}
-                                </span>
+        <div class="members-list">
+            {% for team_member in memberships %}
+                <div class="member-row">
+                    <div class="avatar avatar--md avatar--circle">
+                        {{ team_member.user.username|first|upper }}
+                    </div>
+                    <div class="member-row__info">
+                        <span class="member-row__name">{{ team_member.user.username }}</span>
+                        {% if team_member.user.email %}
+                            <span class="member-row__email">{{ team_member.user.email }}</span>
+                        {% endif %}
+                    </div>
+                    <span class="badge {% if team_member.role == 'O' %}badge--owner{% elif team_member.role == 'A' %}badge--admin{% else %}badge--member{% endif %}">
+                        {{ team_member.get_role_display }}
+                    </span>
+                    <div class="member-row__actions">
+                        {% if membership.role == "O" %}
+                            {% if team_member.role != "O" %}
+                                <a href="{% url 'change_member_role' team.id team_member.user.id %}" class="btn btn--ghost btn--sm">
+                                    Change role
+                                </a>
                             {% endif %}
-                        </div>
-
-                        <div class="
-                            member-role
-                            {% if team_member.role == 'O' %}
-                                role-owner
-                            {% elif team_member.role == 'A' %}
-                                role-admin
-                            {% else %}
-                                role-member
-                            {% endif %}
-                        ">
-                            {{ team_member.get_role_display }}
-                        </div>
-{% if membership.role == "O" %}
-    {% if team_member.role != "O" %}
-        <a
-            href="{% url 'change_member_role' team.id team_member.user.id %}"
-            class="button button-secondary"
-        >
-            Change role
-        </a>
-    {% endif %}
-{% endif %}
+                        {% endif %}
                         {% if membership.role == "O" or membership.role == "A" %}
                             {% if team_member.role != "O" %}
-                                <a
-                                    href="{% url 'remove_member' team.id team_member.user.id %}"
-                                    class="button button-danger"
-                                >
+                                <a href="{% url 'remove_member' team.id team_member.user.id %}" class="btn btn--ghost btn--sm" style="color:var(--color-danger)">
                                     Remove
                                 </a>
                             {% endif %}
                         {% endif %}
-
                     </div>
-
-                {% empty %}
-
-                    <div class="empty-state">
-                        <div class="empty-icon">+</div>
-
-                        <h3>No members</h3>
-
-                        <p>
-                            This team doesn't have any members yet.
-                        </p>
-                    </div>
-
-                {% endfor %}
-
-            </div>
-
-        </section>
-
-        <section class="team-section">
-
-            <div class="section-header">
-                <div>
-                    <h2>Projects</h2>
-
-                    <p>
-                        Projects belonging to this team.
-                    </p>
                 </div>
-            </div>
-
-            {% if projects %}
-
-                <div class="project-grid">
-
-                    {% for project in projects %}
-
-                        <article class="project-card">
-
-                            <div class="project-card-top">
-                                <div class="project-icon">
-                                    {{ project.name|first|upper }}
-                                </div>
-
-                                <span class="project-arrow">→</span>
-                            </div>
-
-                            <h3>{{ project.name }}</h3>
-
-                            {% if project.description %}
-                                <p>{{ project.description }}</p>
-                            {% else %}
-                                <p class="project-no-description">
-                                    No description provided.
-                                </p>
-                            {% endif %}
-
-                            <div class="project-card-footer">
-                                <span>
-                                    Created by
-                                    {{ project.created_by.username }}
-                                </span>
-
-                                <a
-                                    href="{% url 'project_detail' project.id %}"
-                                >
-                                    View project
-                                </a>
-                            </div>
-
-                        </article>
-
-                    {% endfor %}
-
-                </div>
-
-            {% else %}
-
+            {% empty %}
                 <div class="empty-state">
-
-                    <div class="empty-icon">+</div>
-
-                    <h3>No projects yet</h3>
-
-                    <p>
-                        Create a project to start organizing
-                        your team's work.
-                    </p>
-
-                    <a
-                        href="{% url 'create_project' team.id %}"
-                        class="button button-primary"
-                    >
-                        Create project
-                    </a>
-
+                    <div class="empty-state__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>No members</h3>
+                    <p>This team doesn't have any members yet.</p>
                 </div>
+            {% endfor %}
+        </div>
+    </section>
 
-            {% endif %}
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2>Projects</h2>
+                <p class="section-header__description">Projects belonging to this team.</p>
+            </div>
+        </div>
 
-        </section>
+        {% if projects %}
+            <div class="project-grid">
+                {% for project in projects %}
+                    <a href="{% url 'project_detail' project.id %}" class="project-card">
+                        <div class="project-card__top">
+                            <div class="avatar avatar--md">
+                                {{ project.name|first|upper }}
+                            </div>
+                            <span class="project-card__arrow">&rarr;</span>
+                        </div>
+                        <h3>{{ project.name }}</h3>
+                        {% if project.description %}
+                            <p class="project-card__description">{{ project.description }}</p>
+                        {% else %}
+                            <p class="project-card__description project-card__description--muted">No description provided.</p>
+                        {% endif %}
+                        <div class="project-card__footer">
+                            <span class="project-card__meta">Created by {{ project.created_by.username }}</span>
+                            <span class="project-card__link">View project &rarr;</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3>No projects yet</h3>
+                <p>Create a project to start organizing your team's work.</p>
+                <a href="{% url 'create_project' team.id %}" class="btn btn--primary">
+                    Create project
+                </a>
+            </div>
+        {% endif %}
+    </section>
 
-    </div>
-
-</section>
+</div>
 
 {% endblock %}

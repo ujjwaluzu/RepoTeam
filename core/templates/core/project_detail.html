@@ -4,147 +4,85 @@
 
 {% block content %}
 
-<section class="project-page">
+<div class="page-container">
 
-    <a href="{% url 'team_detail' project.team.id %}" class="back-link">
-        ← Back to {{ project.team.name }}
+    <a href="{% url 'team_detail' project.team.id %}" class="page-header__back">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to {{ project.team.name }}
     </a>
 
-    <header class="project-header">
-
+    <header class="project-detail__header">
         <div>
-            <p class="eyebrow">Project</p>
-
+            <span class="page-header__eyebrow">Project</span>
             <h1>{{ project.name }}</h1>
-
             {% if project.description %}
                 <p>{{ project.description }}</p>
             {% else %}
-                <p class="muted">
-                    No description provided.
-                </p>
+                <p class="text-muted">No description provided.</p>
             {% endif %}
         </div>
-
-<a
-    href="{% url 'create_issue' project.id %}"
-    class="button button-primary"
->
-    + Create issue
-</a>
-
+        <a href="{% url 'create_issue' project.id %}" class="btn btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create issue
+        </a>
     </header>
 
-
-    <section class="project-section">
-
+    <section class="section">
         <div class="section-header">
-
             <div>
                 <h2>Issues</h2>
-
-                <p>
-                    {{ issues|length }}
-                    issue{{ issues|length|pluralize }}
-                    in this project.
+                <p class="section-header__description">
+                    {{ issues|length }} issue{{ issues|length|pluralize }} in this project.
                 </p>
             </div>
-
         </div>
 
-
         {% if issues %}
-
             <div class="issues-list">
-
                 {% for issue in issues %}
-
-                    <article class="issue-card">
-
-                        <div class="issue-main">
-
-                            <div class="issue-status">
-                                {{ issue.get_status_display }}
-                            </div>
-
-                            <div>
-                                <h3>{{ issue.title }}</h3>
-
-                                {% if issue.description %}
-                                    <p>{{ issue.description }}</p>
-                                {% endif %}
-                            </div>
-
+                    <div class="issue-row">
+                        <div class="issue-row__main">
+                            <div class="issue-row__title">{{ issue.title }}</div>
+                            {% if issue.description %}
+                                <div class="issue-row__description">{{ issue.description }}</div>
+                            {% endif %}
                         </div>
-
-
-
-                        <div class="issue-meta">
-
-                            <span class="priority-badge">
+                        <div class="issue-row__meta">
+                            <span class="badge badge--status-{% if issue.status == 'T' %}todo{% elif issue.status == 'IP' %}progress{% elif issue.status == 'IR' %}review{% else %}done{% endif %}">
+                                {{ issue.get_status_display }}
+                            </span>
+                            <span class="badge badge--priority-{% if issue.priority == 'L' %}low{% elif issue.priority == 'M' %}medium{% else %}high{% endif %}">
                                 {{ issue.get_priority_display }}
                             </span>
-
                             {% if issue.assigned_to %}
-                                <span>
-                                    Assigned to
+                                <span class="issue-row__assignee">
                                     {{ issue.assigned_to.username }}
                                 </span>
                             {% else %}
-                                <span>
-                                    Unassigned
-                                </span>
+                                <span class="issue-row__assignee">Unassigned</span>
                             {% endif %}
-
                         </div>
-
-                                                                        <a
-    href="{% url 'edit_issue' issue.id %}"
-    class="button button-secondary"
->
-    Edit
-</a>
-
-
-<a
-    href="{% url 'delete_issue' issue.id %}"
-    class="button button-danger"
->
-    Delete
-</a>
-
-                    </article>
-
+                        <div class="issue-row__actions">
+                            <a href="{% url 'edit_issue' issue.id %}" class="btn btn--ghost btn--sm">Edit</a>
+                            <a href="{% url 'delete_issue' issue.id %}" class="btn btn--ghost btn--sm" style="color:var(--color-danger)">Delete</a>
+                        </div>
+                    </div>
                 {% endfor %}
-
             </div>
-
         {% else %}
-
             <div class="empty-state">
-
-                <div class="empty-icon">+</div>
-
+                <div class="empty-state__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
                 <h3>No issues yet</h3>
-
-                <p>
-                    Create an issue to start tracking
-                    work for this project.
-                </p>
-
-<a
-    href="{% url 'create_issue' project.id %}"
-    class="button button-primary"
->
-    + Create issue
-</a>
-
+                <p>Create an issue to start tracking work for this project.</p>
+                <a href="{% url 'create_issue' project.id %}" class="btn btn--primary">
+                    Create issue
+                </a>
             </div>
-
         {% endif %}
-
     </section>
 
-</section>
+</div>
 
 {% endblock %}

@@ -1,104 +1,61 @@
 {% extends "core/base.html" %}
 
-{% block title %}Create Project — RepoTeam{% endblock %}
+{% block title %}Create project — RepoTeam{% endblock %}
 
 {% block content %}
 
-<section class="form-page">
+<div class="form-page">
+    <div class="form-page__inner">
 
-    <div class="form-container">
-
-        <div class="form-header">
-
-            <a href="{% url 'team_detail' team.id %}" class="back-link">
-                ← Back to {{ team.name }}
+        <div class="page-header">
+            <a href="{% url 'team_detail' team.id %}" class="page-header__back">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Back to {{ team.name }}
             </a>
-
-            <p class="eyebrow">New project</p>
-
+            <span class="page-header__eyebrow">New project</span>
             <h1>Create a project</h1>
-
-            <p>
-                Create a project inside
-                <strong>{{ team.name }}</strong>
+            <p class="page-header__description">
+                Create a project inside <strong>{{ team.name }}</strong>
                 and start organizing your team's work.
             </p>
-
         </div>
 
-
-        <form method="post" class="app-form">
-
+        <form method="post" class="form-card">
             {% csrf_token %}
 
             {% if form.non_field_errors %}
-                <div class="form-errors">
-                    {{ form.non_field_errors }}
-                </div>
+                <div class="form-errors">{{ form.non_field_errors }}</div>
             {% endif %}
 
-
             <div class="form-field">
-
-                <label for="{{ form.name.id_for_label }}">
-                    Project name
-                </label>
-
+                <label for="{{ form.name.id_for_label }}">Project name</label>
                 {{ form.name }}
-
                 {% if form.name.errors %}
-                    <div class="field-error">
-                        {{ form.name.errors }}
-                    </div>
+                    <div class="form-field-error">{{ form.name.errors }}</div>
                 {% endif %}
-
-                <span class="field-help">
-                    Give your project a clear and recognizable name.
-                </span>
-
+                <span class="form-field-help">Give your project a clear and recognizable name.</span>
             </div>
-
 
             <div class="form-field">
-
-                <label for="{{ form.description.id_for_label }}">
-                    Description
-                </label>
-
+                <label for="{{ form.description.id_for_label }}">Description</label>
                 {{ form.description }}
-
                 {% if form.description.errors %}
-                    <div class="field-error">
-                        {{ form.description.errors }}
-                    </div>
+                    <div class="form-field-error">{{ form.description.errors }}</div>
                 {% endif %}
-
-                <span class="field-help">
-                    Briefly describe what you're building.
-                </span>
-
+                <span class="form-field-help">Briefly describe what you're building.</span>
             </div>
-
 
             <div class="form-actions">
-
-                <a
-                    href="{% url 'team_detail' team.id %}"
-                    class="button button-secondary"
-                >
+                <a href="{% url 'team_detail' team.id %}" class="btn btn--secondary">
                     Cancel
                 </a>
-
-                <button type="submit" class="button button-primary">
+                <button type="submit" class="btn btn--primary">
                     Create project
                 </button>
-
             </div>
-
         </form>
 
     </div>
-
-</section>
+</div>
 
 {% endblock %}

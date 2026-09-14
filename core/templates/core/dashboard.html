@@ -4,119 +4,82 @@
 
 {% block content %}
 
-<section class="dashboard">
+<div class="page-container">
 
-    <div class="dashboard-header">
-        <div>
-            <p class="eyebrow">Workspace</p>
+    <div class="page-header page-header--split">
+        <div class="page-header__left">
+            <span class="page-header__eyebrow">Workspace</span>
             <h1>Dashboard</h1>
-            <p class="dashboard-subtitle">
-                Welcome back, {{ user.username }}. Here's what's happening
-                with your teams.
+            <p class="page-header__description">
+                Welcome back, {{ user.username }}. Here are your teams.
             </p>
         </div>
-
-<a href="{% url 'create_team' %}" class="button button-primary">
-    + Create team
-</a>
+        <a href="{% url 'create_team' %}" class="btn btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create team
+        </a>
     </div>
 
-
-    <section class="dashboard-stats">
-
-        <div class="stat-card">
-            <span class="stat-label">Teams</span>
-            <strong>{{ teams|length }}</strong>
-            <span class="stat-description">Teams you're part of</span>
+    <div class="dashboard__stats">
+        <div class="dashboard__stat">
+            <div class="dashboard__stat-label">Teams</div>
+            <div class="dashboard__stat-value">{{ teams|length }}</div>
         </div>
-
-        <div class="stat-card">
-            <span class="stat-label">Projects</span>
-            <strong>—</strong>
-            <span class="stat-description">Projects across your teams</span>
+        <div class="dashboard__stat">
+            <div class="dashboard__stat-label">Projects</div>
+            <div class="dashboard__stat-value">{{ projects|length }}</div>
         </div>
-
-        <div class="stat-card">
-            <span class="stat-label">Open issues</span>
-            <strong>—</strong>
-            <span class="stat-description">Issues that need attention</span>
+        <div class="dashboard__stat">
+            <div class="dashboard__stat-label">Open issues</div>
+            <div class="dashboard__stat-value">{{ open_issues|length }}</div>
         </div>
+    </div>
 
-    </section>
-
-
-    <section class="dashboard-section">
-
+    <section class="section">
         <div class="section-header">
             <div>
                 <h2>Your teams</h2>
-                <p>Teams and workspaces you're currently part of.</p>
+                <p class="section-header__description">Teams and workspaces you're part of.</p>
             </div>
         </div>
 
-
         {% if teams %}
-
             <div class="team-grid">
-
                 {% for team in teams %}
-
-                    <article class="team-card">
-
-                        <div class="team-card-top">
-                            <div class="team-icon">
+                    <a href="{% url 'team_detail' team.id %}" class="team-card">
+                        <div class="team-card__top">
+                            <div class="avatar avatar--lg avatar--dark">
                                 {{ team.name|first|upper }}
                             </div>
-
-                            <span class="team-arrow">→</span>
+                            <span class="team-card__arrow">&rarr;</span>
                         </div>
-
                         <h3>{{ team.name }}</h3>
-
                         {% if team.description %}
-                            <p>{{ team.description }}</p>
+                            <p class="team-card__description">{{ team.description }}</p>
                         {% else %}
-                            <p class="team-no-description">
-                                No description provided.
-                            </p>
+                            <p class="team-card__description team-card__description--muted">No description provided.</p>
                         {% endif %}
-
-                        <div class="team-card-footer">
-                            <span>Team workspace</span>
-<a href="{% url 'team_detail' team.id %}">
-    View team
-</a>
+                        <div class="team-card__footer">
+                            <span class="team-card__meta">Team workspace</span>
+                            <span class="team-card__link">View team &rarr;</span>
                         </div>
-
-                    </article>
-
+                    </a>
                 {% endfor %}
-
             </div>
-
         {% else %}
-
             <div class="empty-state">
-
-                <div class="empty-icon">+</div>
-
+                <div class="empty-state__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                </div>
                 <h3>No teams yet</h3>
-
-                <p>
-                    Create your first team and start building
-                    something together.
-                </p>
-
-<a href="{% url 'create_team' %}" class="button button-primary">
-    + Create your first team
-</a>
-
+                <p>Create your first team and start building something together.</p>
+                <a href="{% url 'create_team' %}" class="btn btn--primary">
+                    Create your first team
+                </a>
             </div>
-
         {% endif %}
-
     </section>
 
-</section>
+</div>
 
 {% endblock %}

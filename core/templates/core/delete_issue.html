@@ -1,42 +1,41 @@
 {% extends "core/base.html" %}
 
-{% block title %}Delete Issue · RepoTeam{% endblock %}
+{% block title %}Delete issue — RepoTeam{% endblock %}
 
 {% block content %}
-<section class="form-page">
-    <div class="form-header">
-        <a
-            href="{% url 'project_detail' issue.project.id %}"
-            class="back-link"
-        >
-            ← Back to project
-        </a>
 
-        <h1>Delete issue</h1>
+<div class="confirm-page">
+    <div class="confirm-card">
 
-        <p>
-            Are you sure you want to delete
-            <strong>{{ issue.title }}</strong>?
-        </p>
+        <div class="confirm-card__header">
+            <a href="{% url 'project_detail' issue.project.id %}" class="page-header__back">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Back to project
+            </a>
+            <h1>Delete issue</h1>
+            <p>
+                Are you sure you want to delete
+                <strong>{{ issue.title }}</strong>?
+            </p>
+        </div>
 
-        <p class="warning-text">
-            This action cannot be undone.
-        </p>
+        <div class="confirm-card__warning">
+            This action cannot be undone. The issue and all its data will be permanently removed.
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="confirm-card__actions">
+                <a href="{% url 'project_detail' issue.project.id %}" class="btn btn--secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn--danger">
+                    Delete issue
+                </button>
+            </div>
+        </form>
+
     </div>
+</div>
 
-    <form method="post" class="form-actions">
-        {% csrf_token %}
-
-        <a
-            href="{% url 'project_detail' issue.project.id %}"
-            class="button button-secondary"
-        >
-            Cancel
-        </a>
-
-        <button type="submit" class="button button-danger">
-            Delete issue
-        </button>
-    </form>
-</section>
 {% endblock %}

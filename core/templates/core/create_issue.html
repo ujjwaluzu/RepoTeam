@@ -1,98 +1,85 @@
 {% extends "core/base.html" %}
 
-{% block title %}Create Issue · RepoTeam{% endblock %}
+{% block title %}Create issue — RepoTeam{% endblock %}
 
 {% block content %}
-<section class="form-page">
-    <div class="form-header">
-        <a href="{% url 'project_detail' project.id %}" class="back-link">
-            ← Back to project
-        </a>
 
-        <h1>Create issue</h1>
-        <p>
-            Add a new issue to
-            <strong>{{ project.name }}</strong>.
-        </p>
-    </div>
+<div class="form-page">
+    <div class="form-page__inner">
 
-    <form method="post" class="app-form">
-        {% csrf_token %}
-
-        {{ form.non_field_errors }}
-
-        <div class="form-field">
-            <label for="{{ form.title.id_for_label }}">
-                Title
-            </label>
-
-            {{ form.title }}
-
-            {% for error in form.title.errors %}
-                <p class="form-error">{{ error }}</p>
-            {% endfor %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.description.id_for_label }}">
-                Description
-            </label>
-
-            {{ form.description }}
-
-            {% for error in form.description.errors %}
-                <p class="form-error">{{ error }}</p>
-            {% endfor %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.status.id_for_label }}">
-                Status
-            </label>
-
-            {{ form.status }}
-
-            {% for error in form.status.errors %}
-                <p class="form-error">{{ error }}</p>
-            {% endfor %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.priority.id_for_label }}">
-                Priority
-            </label>
-
-            {{ form.priority }}
-
-            {% for error in form.priority.errors %}
-                <p class="form-error">{{ error }}</p>
-            {% endfor %}
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.assigned_to.id_for_label }}">
-                Assign to
-            </label>
-
-            {{ form.assigned_to }}
-
-            {% for error in form.assigned_to.errors %}
-                <p class="form-error">{{ error }}</p>
-            {% endfor %}
-        </div>
-
-        <div class="form-actions">
-            <a
-                href="{% url 'project_detail' project.id %}"
-                class="button button-secondary"
-            >
-                Cancel
+        <div class="page-header">
+            <a href="{% url 'project_detail' project.id %}" class="page-header__back">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Back to project
             </a>
-
-            <button type="submit" class="button button-primary">
-                Create issue
-            </button>
+            <h1>Create issue</h1>
+            <p class="page-header__description">
+                Add a new issue to <strong>{{ project.name }}</strong>.
+            </p>
         </div>
-    </form>
-</section>
+
+        <form method="post" class="form-card">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-field">
+                <label for="{{ form.title.id_for_label }}">Title</label>
+                {{ form.title }}
+                {% for error in form.title.errors %}
+                    <div class="form-field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-field">
+                <label for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+                {% for error in form.description.errors %}
+                    <div class="form-field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-field">
+                <label for="{{ form.status.id_for_label }}">Status</label>
+                {{ form.status }}
+                {% for error in form.status.errors %}
+                    <div class="form-field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-field">
+                <label for="{{ form.priority.id_for_label }}">Priority</label>
+                {{ form.priority }}
+                {% for error in form.priority.errors %}
+                    <div class="form-field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-field">
+                <label for="{{ form.assigned_to.id_for_label }}">Assign to</label>
+                {{ form.assigned_to }}
+                {% for error in form.assigned_to.errors %}
+                    <div class="form-field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'project_detail' project.id %}" class="btn btn--secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn--primary">
+                    Create issue
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
 {% endblock %}

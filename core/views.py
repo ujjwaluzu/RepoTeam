@@ -27,11 +27,21 @@ def dashboard(request):
     if request.user.is_authenticated:
         memberships = Membership.objects.filter(user=request.user)
         teams = [membership.team for membership in memberships]
+        team_ids = [membership.team_id for membership in memberships]
+
+        projects = Project.objects.filter(team_id__in=team_ids)
+        open_issues = Issue.objects.filter(
+            project__team_id__in=team_ids
+        ).exclude(status=Issue.Status.DONE)
 
         return render(
             request,
             'core/dashboard.html',
-            {'teams': teams}
+            {
+                'teams': teams,
+                'projects': projects,
+                'open_issues': open_issues,
+            }
         )
 @login_required  
 def create_team(request):

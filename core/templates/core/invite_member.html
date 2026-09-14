@@ -1,53 +1,54 @@
 {% extends "core/base.html" %}
 
-{% block title %}Invite Member · RepoTeam{% endblock %}
+{% block title %}Invite member — RepoTeam{% endblock %}
 
 {% block content %}
-<section class="form-page">
-    <div class="form-header">
-        <a
-            href="{% url 'team_detail' team.id %}"
-            class="back-link"
-        >
-            ← Back to team
-        </a>
 
-        <h1>Invite a member</h1>
+<div class="form-page">
+    <div class="form-page__inner">
 
-        <p>
-            Add someone to <strong>{{ team.name }}</strong>.
-        </p>
-    </div>
-
-    <form method="post" class="app-form">
-        {% csrf_token %}
-
-        {{ form.non_field_errors }}
-
-        <div class="form-field">
-            <label for="{{ form.username.id_for_label }}">
-                Username
-            </label>
-
-            {{ form.username }}
-
-            {% for error in form.username.errors %}
-                <p class="form-error">{{ error }}</p>
-            {% endfor %}
-        </div>
-
-        <div class="form-actions">
-            <a
-                href="{% url 'team_detail' team.id %}"
-                class="button button-secondary"
-            >
-                Cancel
+        <div class="page-header">
+            <a href="{% url 'team_detail' team.id %}" class="page-header__back">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Back to team
             </a>
-
-            <button type="submit" class="button button-primary">
-                Add member
-            </button>
+            <h1>Invite a member</h1>
+            <p class="page-header__description">
+                Add someone to <strong>{{ team.name }}</strong>.
+            </p>
         </div>
-    </form>
-</section>
+
+        <form method="post" class="form-card">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-field">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+                {% for error in form.username.errors %}
+                    <div class="form-field-error">{{ error }}</div>
+                {% endfor %}
+                <span class="form-field-help">Enter the exact username of the person you want to add.</span>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'team_detail' team.id %}" class="btn btn--secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn--primary">
+                    Add member
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
 {% endblock %}

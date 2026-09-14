@@ -4,46 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
     <title>{% block title %}RepoTeam{% endblock %}</title>
-
- 
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-
 <body>
 
-    <nav>
-        <a href="{% url 'index' %}" class="brand">RepoTeam</a>
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-inner">
+            <a href="{% url 'index' %}" class="nav-brand">
+                <img src="{% static 'core/images/logo.png' %}" alt="RepoTeam" class="nav-logo">
+            </a>
 
-        <div class="nav-links">
-            {% if user.is_authenticated %}
-                <span>{{ user.username }}</span>
-<form method="post" action="{% url 'logout' %}" class="nav-logout">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}">Register</a>
-            {% endif %}
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('is-open')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+
+            <div class="nav-links">
+                {% if user.is_authenticated %}
+                    <span class="nav-username">{{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" class="nav-logout" style="margin:0">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-logout-btn">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-link">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn--primary btn--sm">Register</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
-    <main>
-
-        {% if messages %}
-            <div class="messages">
+    {% if messages %}
+        <div class="page-container">
+            <div class="alerts">
                 {% for message in messages %}
-                    <div class="message">{{ message }}</div>
+                    <div class="alert {% if message.tags == 'success' %}alert--success{% elif message.tags == 'error' %}alert--error{% elif message.tags == 'warning' %}alert--warning{% else %}alert--success{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
                 {% endfor %}
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
-        {% block content %}
-        {% endblock %}
-
+    <main class="content" role="main">
+        {% block content %}{% endblock %}
     </main>
+
+    <script>
+    (function() {
+        var alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.transition = 'opacity 0.3s ease';
+                alert.style.opacity = '0';
+                setTimeout(function() { alert.remove(); }, 300);
+            }, 5000);
+        });
+    })();
+    </script>
 
 </body>
 </html>
