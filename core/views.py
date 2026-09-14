@@ -359,3 +359,70 @@ def invite_member(request, team_id):
             "team": team,
         },
     )
+
+
+@login_required
+def remove_member(request, team_id, user_id):
+    team = get_object_or_404(Team, id=team_id)
+
+    current_membership = Membership.objects.filter(
+        user=request.user,
+        team=team,
+    ).first()
+
+    if current_membership is None:
+        return redirect("dashboard")
+
+    if current_membership.role not in [
+        Membership.Role.OWNER,
+        Membership.Role.ADMIN,
+    ]:
+        messages.error(
+            request,
+            "Only team owners and admins can remove members.",
+        )
+        return redirect("team_detail", team_id=team.id)
+
+    member = get_object_or_404(
+        Membership,
+        user_id=user_id,
+        team=team,
+    )
+
+    if member.role == Membership.Role.OWNER:
+        messages.error(
+            request,
+            "The team owner cannot be removed.",
+        )
+        return redirect("team_detail", team_id=team.id)
+
+    if member.role == Membership.Role.ADMIN and (
+        current_membership.role != Membership.Role.OWNER
+    ):
+        messages.error(
+            request,
+            "Only the team owner can remove an admin.",
+        )
+        return redirect("team_detail", team_id=team.id)
+
+    if request.method == "POST":
+        member.delete()
+
+        messages.success(
+            request,
+            "Member removed successfully.",
+        )
+
+        return redirect(
+            "team_detail",
+            team_id=team.id,
+        )
+
+    return render(
+        request,
+        "core/remove_member.html",
+        {
+            "team": team,
+            "member": member,
+        },
+    )

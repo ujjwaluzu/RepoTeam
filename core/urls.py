@@ -51,5 +51,10 @@ path(
     views.invite_member,
     name="invite_member",
 ),
+path(
+    "teams/<int:team_id>/members/<int:user_id>/remove/",
+    views.remove_member,
+    name="remove_member",
+),
 ]
 

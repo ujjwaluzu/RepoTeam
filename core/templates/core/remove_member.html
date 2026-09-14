@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+
+{% block title %}Remove Member · RepoTeam{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="form-header">
+        <a
+            href="{% url 'team_detail' team.id %}"
+            class="back-link"
+        >
+            ← Back to team
+        </a>
+
+        <h1>Remove member</h1>
+
+        <p>
+            Are you sure you want to remove
+            <strong>{{ member.user.username }}</strong>
+            from <strong>{{ team.name }}</strong>?
+        </p>
+
+        <p class="warning-text">
+            This member will lose access to the team and its projects.
+        </p>
+    </div>
+
+    <form method="post" class="form-actions">
+        {% csrf_token %}
+
+        <a
+            href="{% url 'team_detail' team.id %}"
+            class="button button-secondary"
+        >
+            Cancel
+        </a>
+
+        <button type="submit" class="button button-danger">
+            Remove member
+        </button>
+    </form>
+</section>
+{% endblock %}

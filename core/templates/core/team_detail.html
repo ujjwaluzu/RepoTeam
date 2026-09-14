@@ -20,6 +20,7 @@
 
             <div>
                 <p class="eyebrow">Team workspace</p>
+
                 <h1>{{ team.name }}</h1>
 
                 {% if team.description %}
@@ -34,13 +35,15 @@
         </div>
 
         <div class="team-header-actions">
-<a href="{% url 'create_project' team.id %}" class="button button-primary">
-    + Create project
-</a>
+            <a
+                href="{% url 'create_project' team.id %}"
+                class="button button-primary"
+            >
+                + Create project
+            </a>
         </div>
 
     </header>
-
 
     <div class="team-content">
 
@@ -49,6 +52,7 @@
             <div class="section-header">
                 <div>
                     <h2>Members</h2>
+
                     <p>
                         {{ memberships|length }}
                         member{{ memberships|length|pluralize }}
@@ -56,50 +60,61 @@
                     </p>
                 </div>
 
-{% if membership.role == "O" or membership.role == "A" %}
-    <a
-        href="{% url 'invite_member' team.id %}"
-        class="button button-secondary"
-    >
-        + Add member
-    </a>
-{% endif %}
+                {% if membership.role == "O" or membership.role == "A" %}
+                    <a
+                        href="{% url 'invite_member' team.id %}"
+                        class="button button-secondary"
+                    >
+                        + Add member
+                    </a>
+                {% endif %}
             </div>
-
 
             <div class="members-list">
 
-                {% for membership in memberships %}
+                {% for team_member in memberships %}
 
                     <div class="member-row">
 
                         <div class="member-avatar">
-                            {{ membership.user.username|first|upper }}
+                            {{ team_member.user.username|first|upper }}
                         </div>
 
                         <div class="member-info">
                             <strong>
-                                {{ membership.user.username }}
+                                {{ team_member.user.username }}
                             </strong>
 
-                            {% if membership.user.email %}
+                            {% if team_member.user.email %}
                                 <span>
-                                    {{ membership.user.email }}
+                                    {{ team_member.user.email }}
                                 </span>
                             {% endif %}
                         </div>
 
-                        <div class="member-role
-                            {% if membership.role == 'O' %}
+                        <div class="
+                            member-role
+                            {% if team_member.role == 'O' %}
                                 role-owner
-                            {% elif membership.role == 'A' %}
+                            {% elif team_member.role == 'A' %}
                                 role-admin
                             {% else %}
                                 role-member
                             {% endif %}
                         ">
-                            {{ membership.get_role_display }}
+                            {{ team_member.get_role_display }}
                         </div>
+
+                        {% if membership.role == "O" or membership.role == "A" %}
+                            {% if team_member.role != "O" %}
+                                <a
+                                    href="{% url 'remove_member' team.id team_member.user.id %}"
+                                    class="button button-danger"
+                                >
+                                    Remove
+                                </a>
+                            {% endif %}
+                        {% endif %}
 
                     </div>
 
@@ -121,85 +136,86 @@
 
         </section>
 
-
         <section class="team-section">
 
             <div class="section-header">
-
                 <div>
                     <h2>Projects</h2>
+
                     <p>
                         Projects belonging to this team.
                     </p>
                 </div>
-
             </div>
 
-{% if projects %}
+            {% if projects %}
 
-    <div class="project-grid">
+                <div class="project-grid">
 
-        {% for project in projects %}
+                    {% for project in projects %}
 
-            <article class="project-card">
+                        <article class="project-card">
 
-                <div class="project-card-top">
-                    <div class="project-icon">
-                        {{ project.name|first|upper }}
-                    </div>
+                            <div class="project-card-top">
+                                <div class="project-icon">
+                                    {{ project.name|first|upper }}
+                                </div>
 
-                    <span class="project-arrow">→</span>
+                                <span class="project-arrow">→</span>
+                            </div>
+
+                            <h3>{{ project.name }}</h3>
+
+                            {% if project.description %}
+                                <p>{{ project.description }}</p>
+                            {% else %}
+                                <p class="project-no-description">
+                                    No description provided.
+                                </p>
+                            {% endif %}
+
+                            <div class="project-card-footer">
+                                <span>
+                                    Created by
+                                    {{ project.created_by.username }}
+                                </span>
+
+                                <a
+                                    href="{% url 'project_detail' project.id %}"
+                                >
+                                    View project
+                                </a>
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
                 </div>
 
-                <h3>{{ project.name }}</h3>
+            {% else %}
 
-                {% if project.description %}
-                    <p>{{ project.description }}</p>
-                {% else %}
-                    <p class="project-no-description">
-                        No description provided.
+                <div class="empty-state">
+
+                    <div class="empty-icon">+</div>
+
+                    <h3>No projects yet</h3>
+
+                    <p>
+                        Create a project to start organizing
+                        your team's work.
                     </p>
-                {% endif %}
 
-                <div class="project-card-footer">
-                    <span>
-                        Created by {{ project.created_by.username }}
-                    </span>
+                    <a
+                        href="{% url 'create_project' team.id %}"
+                        class="button button-primary"
+                    >
+                        Create project
+                    </a>
 
-<a href="{% url 'project_detail' project.id %}">
-    View project
-</a>
                 </div>
 
-            </article>
-
-        {% endfor %}
-
-    </div>
-
-{% else %}
-
-    <div class="empty-state">
-
-        <div class="empty-icon">+</div>
-
-        <h3>No projects yet</h3>
-
-        <p>
-            Create a project to start organizing
-            your team's work.
-        </p>
-
-        <a
-            href="{% url 'create_project' team.id %}"
-            class="button button-primary"
-        >
-            Create project
-        </a>
-
-    </div>
-
-{% endif %}
+            {% endif %}
 
         </section>
 
