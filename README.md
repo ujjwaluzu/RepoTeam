@@ -57,14 +57,21 @@ The application is currently an MVP: it covers the core team-project-issue workf
 
 ## Screenshots
 
-Screenshots will be added here. Planned captures:
+### Homepage
 
-| Page | Path |
-| ---- | ---- |
-| Homepage | `docs/screenshots/home.png` |
-| Dashboard | `docs/screenshots/dashboard.png` |
-| Team detail | `docs/screenshots/team-detail.png` |
-| Project detail | `docs/screenshots/project-detail.png` |
+![RepoTeam Homepage](docs/screenshots/home.png)
+
+### Dashboard
+
+![RepoTeam Dashboard](docs/screenshots/dashboard.png)
+
+### Team Detail
+
+![RepoTeam Team Detail](docs/screenshots/team-detail.png)
+
+### Project Detail
+
+![RepoTeam Project Detail](docs/screenshots/project-detail.png)
 
 ## Tech Stack
 
